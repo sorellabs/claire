@@ -25,7 +25,7 @@
 # WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 { choose-int, choose } = require './random'
-{ make-value, choice, as-generator, repeat, frequency, combine } = require './generating'
+{ make-value, choice, as-generator, repeat, frequency, combine, sized } = require './generating'
 
 { pow } = Math
 { from-char-code: char } = String
@@ -36,13 +36,13 @@ Null         = as-generator null
 Undefined    = as-generator void
 Nothing      = choice Null, Undefined
 Bool         = choice true, false
-Num          = as-generator (s) -> choose -s, s), 'num'
-PosNum       = as-generator (s) -> choose 1, s), 'pos-num'
-NegNum       = as-generator (s) -> choose -1, -s), 'neg-num'
-Int          = as-generator (s) -> choose-int -s, s), 'int'
-PosInt       = as-generator (s) -> choose-int 1, s), 'pos-int'
-NegInt       = as-generator (s) -> choose-int -1, s), 'neg-int'
-Char         = as-generator (s) -> char (choose-int 0, s)), 'char'
+Num          = as-generator ((s) -> choose -s, s), 'num'
+PosNum       = as-generator ((s) -> choose 1, s), 'pos-num'
+NegNum       = as-generator ((s) -> choose -1, -s), 'neg-num'
+Int          = as-generator ((s) -> choose-int -s, s), 'int'
+PosInt       = as-generator ((s) -> choose-int 1, s), 'pos-int'
+NegInt       = as-generator ((s) -> choose-int -1, s), 'neg-int'
+Char         = as-generator ((s) -> char (choose-int 0, s)), 'char'
 ANSIChar     = (sized 127 Char)
 ASCIIChar    = (sized 255 Char)
 NumChar      = as-generator (-> char (choose-int 48, 57)), 'num-char'
