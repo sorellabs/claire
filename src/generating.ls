@@ -24,81 +24,186 @@
 # OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
 # WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-{ pick-one, choose-int } = require './random'
-{ Base, derive } = require 'boo'
+
+### -- Dependencies ----------------------------------------------------
+{ Base, derive }              = require 'boo'
 { concat-map, replicate, id } = require 'prelude-ls'
+{ pick-one, choose-int }      = require './random'
 
 
+### -- Interfaces ------------------------------------------------------
+
+#### type Value a
+# :: { "generator" -> Generator a
+# .. ; "value"     -> a }
+
+
+
+### -- Helpers ---------------------------------------------------------
+
+#### λ callable-p
+# :internal:
+# Checks if something is callable.
+#
+# :: a -> Bool
+callable-p = (a) -> typeof a is 'function'
+
+
+#### λ make-value
+# :internal:
+# Constructs a `Value` type.
+#
+# :: a -> Generator a -> Value a
 make-value = (value, gen) -->
   generator : gen
   value     : value
 
-callable-p = (a) -> typeof a is 'function'
-
+#### λ compute
+# :internal:
+# Computes a value lifted to a `Generator`.
+#
+# :: a -> Generator a -> a
+# :: (a -> b) -> Generator b -> b
 compute = (a, gen) ->
   | callable-p a => a gen.size
   | otherwise    => a
 
+
+### -- Core implementation ---------------------------------------------
+
+#### {} Generator
+# The base generator logic.
+#
+# :: Base <| Generator a
 Generator = Base.derive {
+
+  ##### Data size
+  # A hint for controlling the generated value's complexity.
+  #
+  # :: Number
   size: 100
-  
+
+  ##### λ next
+  # Generates a new random value.
+  #
+  # :: () -> Value a
   next: -> ...
 
+  ##### λ shrink
+  # Continually shrinks a value into the most minimal case within the
+  # context of this generator.
+  #
+  # :: a -> [a]
   shrink: (a) -> ...
 
+  ##### λ to-string
+  # Returns a friendly representation of this generator.
+  #
+  # By convention (of this library), the friendly names are surrounded
+  # by angular brackets to identify them as generators easily.
+  #  
+  # :: () -> String
   to-string: -> '<Generator>'
 }
 
+
+### -- Combinators for constructing Generators -------------------------
+
+#### λ as-generator
+# Lifts a regular value to a `Generator`.
+#
+# This is used by all combinators to allow users to pass regular values
+# as if they were proper `Generators`, making the API cleaner.
+#
+# An optional `label` can be given to provide a friendly name for the
+# constructed generator.
+#
+# :: Generator a -> Generator a
+# :: a, String -> Generator a
 as-generator = (a, label) -> 
   | 'next' of (Object a) => a
   | otherwise            => do
                             Generator.derive {
-                              next: -> make-value (compute a, this), this
                               to-string: -> "<#{label or a}>"
+                              next: -> make-value (compute a, this), this
                             }
 
+
+#### λ choice
+# Alternatively generate values from one of the given generators at
+# random.
+# 
+# The values generated from `choice` generators are uniformly
+# distributed. You can use the `frequency` generator for weighted random
+# choices.
+# 
+# :: Generator a... -> Generator b
 choice = (...as) -> do
                     as := as.map as-generator
                     Generator.derive {
-                      next: ->
-                        gen = pick-one as
-                        make-value gen.next!.value, gen
-
                       to-string: -> "<Choice (#{as})>"
+                      next: -> do
+                               gen = pick-one as
+                               make-value gen.next!.value, gen
                     }
 
-sized = (n, gen) --> (as-generator gen).derive {
-  size: n
-}
 
+#### λ sized
+# Constructs a new `Generator` with a new complexity `size` hint.
+#
+# :: Number -> Generator a -> Generator b
+sized = (n, gen) --> (as-generator gen).derive { size: n }
+
+
+#### λ repeat
+# Constructs a new `Generator` that repeats a given `Generator`.
+#
+# You can provide a reducer function to post-process the generated
+# values.
+#
+# :: Generator a -> Generator b
+# :: Generator a, ([a] -> b) -> Generator b
 repeat = (gen, reduce = id) -> do
                                gen := as-generator gen
                                gen.derive {
-                                 next: ->
-                                   range = [1 to (choose-int 0, @size)]
-                                   xs    = reduce range.map (-> gen.next!value)
-                                   make-value xs, this
-
                                  to-string: -> "<Repeat #{gen}>"
+                                 next: -> do
+                                          range  = [1 to (choose-int 0, @size)]
+                                          values = range.map (-> gen.next!value)
+                                          make-value (reduce values), this
                                }
 
+
+#### λ frequency
+# Constructs a new `Generator` that alternatively chooses between one of
+# the given `Generator`s using a weighted random selection.
+#
+# :: (Number, Generator a)... -> Generator b
 frequency = (...as) -> do
                        gs = concat-map (([w,g]) -> replicate w, g), as
+                       representation = ([w, g]) -> w + ':' + g
+
                        (choice ...gs).derive {
-                         to-string: ->
-                           "<Frequency (#{as.map ([w,g]) -> w + ':' + g})>"
+                         to-string: -> "<Frequency (#{as.map representation)>"
                        }
 
-combine = (reduce, ...as) -> do
-                             gs = as.map as-generator
-                             Generator.derive {
-                               next: ->
-                                 xs = reduce (gs.map (g) -> g.next!value)
-                                 make-value xs, this
 
-                               to-string: ->
-                                 "<Combine (#{gs})>"
-                             }
+#### λ combine
+# Constructs a new `Generator` that yields the combination of several
+# `Generator`s.
+#
+# You must provide a reduction function that tells the generator how to
+# combine the generated values.
+#
+# :: ([a] -> b) -> Generator a... -> Generator b
+combine = (reduce, ...as) --> do
+                              gs = as.map as-generator
+                              Generator.derive {
+                                to-string: -> "<Combine (#{gs})>"
+                                next: -> do
+                                         values = gs.map (g) -> g.next!value
+                                         make-value (reduce values), this
+                              }
 
 
 
