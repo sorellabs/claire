@@ -24,7 +24,7 @@
 # OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
 # WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-{ pick-one, choose-int } = require './primitives'
+{ pick-one, choose-int } = require './random'
 { Base, derive } = require 'boo'
 
 id = (a) -> a
