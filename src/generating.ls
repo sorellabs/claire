@@ -83,7 +83,8 @@ repeat = (gen, reduce = id) -> do
                                }
 
 frequency = (...as) -> do
-                       (choice (concat-map ([w, g]) -> replicate w, g)).derive {
+                       gs = concat-map (([w,g]) -> replicate w, g), as
+                       (choice ...gs).derive {
                          to-string: ->
                            "<Frequency (#{as.map ([w,g]) -> w + ':' + g})>"
                        }
