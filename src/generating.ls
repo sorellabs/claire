@@ -26,6 +26,7 @@
 
 { pick-one, choose-int } = require './random'
 { Base, derive } = require 'boo'
+{ concat-map, replicate } = require 'prelude-ls'
 
 id = (a) -> a
 
@@ -54,7 +55,7 @@ as-generator = (a, label) ->
   | otherwise            => do
                             Generator.derive {
                               next: -> make-value (compute a, this), this
-                              to-string: -> "<#{label or a.to-string!}>"
+                              to-string: -> "<#{label or a}>"
                             }
 
 choice = (...as) -> do
@@ -64,7 +65,7 @@ choice = (...as) -> do
                         gen = pick-one as
                         make-value gen.next!.value, gen
 
-                      to-string: -> "<Choice (#{as.to-string!})>"
+                      to-string: -> "<Choice (#{as})>"
                     }
 
 sized = (n, gen) --> (as-generator gen).derive {
@@ -79,10 +80,25 @@ repeat = (gen, reduce = id) -> do
                                    xs    = reduce range.map (-> gen.next!value)
                                    make-value xs, this
 
-                                 to-string: -> "<Repeat #{gen.to-string!}>"
+                                 to-string: -> "<Repeat #{gen}>"
                                }
 
+frequency = (...as) -> do
+                       (choice (concat-map ([w, g]) -> replicate w, g)).derive {
+                         to-string: ->
+                           "<Frequency (#{as.map ([w,g]) -> w + ':' + g})>"
+                       }
 
+combine = (reduce, ...as) -> do
+                             gs = as.map as-generator
+                             Generator.derive {
+                               next: ->
+                                 xs = reduce (gs.map (g) -> g.next!value)
+                                 make-value xs, this
+
+                               to-string: ->
+                                 "<Combine (#{gs})>"
+                             }
 
 
 
@@ -95,4 +111,6 @@ module.exports = {
   choice
   sized
   repeat
+  frequency
+  combine
 }
