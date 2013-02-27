@@ -1,0 +1,31 @@
+{
+  "name": "claire",
+  "version": "0.0.0",
+  "description": "Property-based testing library (à lá QuickCheck/ScalaCheck).",
+  "main": "./lib/index.js",
+  "directories": {
+    "doc": "docs"
+  },
+  "dependencies": {
+    "boo": "~1.2.4",
+    "prelude-ls": "~0.6.0"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "mocha"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/killdream/claire.git"
+  },
+  "keywords": [
+    "testing",
+    "test",
+    "property-based testing",
+    "random testing",
+    "quickcheck"
+  ],
+  "author": "Quildreen \"Sorella\" Motta <quildreen@gmail.com>",
+  "license": "MIT",
+  "readmeFilename": "README.md"
+}
