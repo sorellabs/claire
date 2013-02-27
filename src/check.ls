@@ -26,20 +26,53 @@
 
 { Base } = require 'boo'
 frozen = Object.freeze
+{ values, reduce } = require 'prelude-ls'
+{round} = Math
+
+as-percentage = (num, total) -> round (num / total) * 100
+  
+
+describe-veredict = (report) ->
+  passed      = report.passed.length
+  failed      = report.failed.length
+  all         = report.all.length
+  ignored     = report.ignored.length
+
+  switch report.veredict
+  | \passed    => "+ OK passed #{passed} tests."
+  | \failed    => "! Falsified after #{all - ignored} tests, #{failed} failed."
+  | \abandoned => "? Aborted after #{all} tests."
+  | otherwise  => "/ Unknown veredict. Likely this test report lacks any data."
+
+describe-ignored = (report) ->
+  ignored = report.ignored.length
+  ignored-pct = as-percentage ignored, report.all.length
+
+  if ignored-pct > 25 => "#ignored (#{ignored-pct}%) tests ignored."
+  else                => ''
+
+
+label-histogram = (report) ->
+  total = report.all.length
+  labels = ["o #{as-percentage v.length, total}% - #k" for k, v of report.labels]
+
+  if labels.length => "> Collected test data:\n    #{labels.join '\n    '}"
+  else             => ''
+
 
 TestReport = Base.derive {
   init: (@property) ->
-    @passed  = []
-    @failed  = []
-    @ignored = []
-    @all     = []
-    @labels  = {}
-    @veredic = null
+    @passed   = []
+    @failed   = []
+    @ignored  = []
+    @all      = []
+    @labels   = {}
+    @veredict = null
 
 
   add: (result) ->
     @all.push result
-    result.labels.map (a) ~> @labels.[]"#{JSON.stringify a}".push result
+    result.labels.map (a) ~> @labels.[]"#a".push result
     switch status result
     | \passed  => @passed.push result
     | \failed  => @failed.push result
@@ -47,7 +80,8 @@ TestReport = Base.derive {
 
   to-string: ->
     """
-    #{@veredict}
+    #{describe-veredict this} #{describe-ignored this}
+    #{label-histogram this}
     """
 }
 
