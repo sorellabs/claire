@@ -24,16 +24,34 @@
 # OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
 # WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
+
+### -- Aliases ---------------------------------------------------------
 { floor, random } = Math
 
+
+### -- Numeric randomness ----------------------------------------------
+
+#### λ choose
+# Picks a random number between `[a, b[`.
+#
 # :: Number, Number -> Number
 choose = (a, b) -> (random! * (b - a)) + a
 
+#### λ choose-int
+# Picks a random integer between `[a, b[`
+#
 # :: Number, Number -> Integer
 choose-int = (a, b) -> floor (choose a, b)
 
+
+### -- Collection randomness -------------------------------------------
+
+#### λ pick-one
+# Picks an element of a sequence at random.
+#
 # :: [a] -> a
 pick-one = (as) -> as[choose-int 0, as.length]
+
 
 
 ### -- Exports ---------------------------------------------------------
