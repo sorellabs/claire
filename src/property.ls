@@ -58,7 +58,6 @@ classify = (args, prop) -->
 # Verifies if the property's invariant's hold for the arguments.
 # :: [a] -> Property -> Bool
 verify = (args, prop) -->
-  console.log '::', args
   !!(prop.invariant ...(values args))
 
 #### λ invalidate
