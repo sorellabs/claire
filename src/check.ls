@@ -25,9 +25,9 @@
 # WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 { Base } = require 'boo'
+frozen = Object.freeze
 
-
-TestResult = Base.derive {
+TestReport = Base.derive {
   init: (@property) ->
     @passed  = []
     @failed  = []
@@ -37,19 +37,18 @@ TestResult = Base.derive {
     @veredic = null
 
 
-  add: (data) ->
-    @all.push data
-    data.labels.map (a) ~> @labels.[]"#{JSON.stringify a}".push data
-    switch status data
-    | \passed  => @passed.push data
-    | \failed  => @failed.push data
-    | \ignored => @ignored.push data
+  add: (result) ->
+    @all.push result
+    result.labels.map (a) ~> @labels.[]"#{JSON.stringify a}".push result
+    switch status result
+    | \passed  => @passed.push result
+    | \failed  => @failed.push result
+    | \ignored => @ignored.push result
 
   to-string: ->
     """
     #{@veredict}
     """
-
 }
 
 status = (result) ->
@@ -61,21 +60,22 @@ failed-p = (result) -> result.ok is false
 
 
 check = (max, property) -->
-  result     = TestResult.make property
+  report     = TestReport.make property
   ignored    = 0
   should-run = true
   while max and should-run
-    claim-data = property.run!
-    result.add claim-data
+    result = property.run!
+    report.add result
 
-    switch status claim-data
+    switch status result
     | \passed  => --max
     | \failed  => should-run = false
     | \ignored => if ++ignored > 1000 => should-run = false
 
-  result.veredict = | ignored > 1000 => \abandoned
+  report.veredict = | ignored > 1000 => \abandoned
                     | max > 0        => \failed
                     | otherwise      => \passed
+  frozen report
   
 
 
