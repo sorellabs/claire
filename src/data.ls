@@ -1,6 +1,6 @@
 ## Module data #########################################################
 #
-# Random data generation.
+# Core data generators.
 #
 #
 # Copyright (c) 2013 Quildreen "Sorella" Motta <quildreen@gmail.com>
