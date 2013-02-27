@@ -43,21 +43,23 @@ values = (.map (.value))
 # Checks if a property is valid for the given arguments.
 # :: [a] -> Property -> Bool
 valid-p = (args, prop) -->
-  prop.implications.some (f) -> f (values ...args)
+  | prop.implications.length is 0 => true
+  | otherwise                     => prop.implications.some (f) -> f ...(values args)
 
 
 #### λ classify
 # Yields a list of classifications for the given arguments.
 # :: [a] -> Property -> [String]
 classify = (args, prop) -->
-  (prop.classifiers.map (f) -> f (values ...args)).filter (!~= null)
+  (prop.classifiers.map (f) -> f ...(values args)).filter (!~= null)
 
 
 #### λ verify
 # Verifies if the property's invariant's hold for the arguments.
 # :: [a] -> Property -> Bool
 verify = (args, prop) -->
-  !!(prop.invariant (values ...args))
+  console.log '::', args
+  !!(prop.invariant ...(values args))
 
 #### λ invalidate
 # Invalidates the property for the given arguments (they're not valid).
