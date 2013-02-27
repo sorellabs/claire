@@ -34,25 +34,30 @@ frozen = Object.freeze
 
 ### -- Helpers ---------------------------------------------------------
 
+#### λ values
+# Extracts the values from a list of generated arguments
+# :: [Value a] -> [a]
+values = (.map (.value))
+
 #### λ valid-p
 # Checks if a property is valid for the given arguments.
 # :: [a] -> Property -> Bool
 valid-p = (args, prop) -->
-  prop.implications.some (f) -> f ...args
+  prop.implications.some (f) -> f (values ...args)
 
 
 #### λ classify
 # Yields a list of classifications for the given arguments.
 # :: [a] -> Property -> [String]
 classify = (args, prop) -->
-  (prop.classifiers.map (f) -> f ...args).filter (!~= null)
+  (prop.classifiers.map (f) -> f (values ...args)).filter (!~= null)
 
 
 #### λ verify
 # Verifies if the property's invariant's hold for the arguments.
 # :: [a] -> Property -> Bool
 verify = (args, prop) -->
-  !!(prop.invariant ...args)
+  !!(prop.invariant (values ...args))
 
 #### λ invalidate
 # Invalidates the property for the given arguments (they're not valid).
@@ -119,7 +124,7 @@ Property = Base.derive {
   # Returns the `Result` of applying the property to randomly generated
   # arguments once.
   # :: @Property => () -> Result
-  run: -> apply-property (@arguments.map (f) -> f!), this
+  run: -> apply-property (@arguments.map (g) -> g.next!), this
 }
 
 
