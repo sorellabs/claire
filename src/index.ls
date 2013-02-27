@@ -32,6 +32,7 @@ merge = (...as) -> as.reduce (<<<)
 module.exports = merge do
                        * { for-all } = require './property'
                        * require './generating'
+                       * require './check'
                        * data: require './data'
 
 console.log (Object.keys module.exports)
