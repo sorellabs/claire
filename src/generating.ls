@@ -26,9 +26,8 @@
 
 { pick-one, choose-int } = require './random'
 { Base, derive } = require 'boo'
-{ concat-map, replicate } = require 'prelude-ls'
+{ concat-map, replicate, id } = require 'prelude-ls'
 
-id = (a) -> a
 
 make-value = (value, gen) -->
   generator : gen
