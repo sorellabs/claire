@@ -45,7 +45,7 @@ valid-p = (args, prop) -->
 # Yields a list of classifications for the given arguments.
 # :: [a] -> Property -> [String]
 classify = (args, prop) -->
-  prop.classifiers.map (f) -> f ...args
+  (prop.classifiers.map (f) -> f ...args).filter (!~= null)
 
 
 #### λ verify
