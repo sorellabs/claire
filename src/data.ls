@@ -25,68 +25,85 @@
 # WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 { choose-int, choose } = require './random'
-{ make-value, choice, as-generator, repeat, frequency, combine, sized } = require './generating'
 
-{ pow } = Math
-{ from-char-code: char } = String
+{ as-generator,
+  choice, frequency, sequence,
+  size, label, transform, repeat } = require './generating'
+
+### -- Helpers ---------------------------------------------------------
 join = (as) -> as.join ''
+char = String.from-char-code
+to-integer = (n) -> n .|. 0
+to-unsigned-integer = (n) -> n >>> 0
 
 
-Null         = as-generator null
-Undefined    = as-generator void
-Nothing      = choice Null, Undefined
-Bool         = choice true, false
-Num          = as-generator ((s) -> choose -s, s), 'num'
-PosNum       = as-generator ((s) -> choose 1, s), 'pos-num'
-NegNum       = as-generator ((s) -> choose -1, -s), 'neg-num'
-Int          = as-generator ((s) -> choose-int -s, s), 'int'
-PosInt       = as-generator ((s) -> choose-int 1, s), 'pos-int'
-NegInt       = as-generator ((s) -> choose-int -1, s), 'neg-int'
-Char         = as-generator ((s) -> char (choose-int 0, s)), 'char'
-ANSIChar     = (sized 127 Char)
-ASCIIChar    = (sized 255 Char)
-NumChar      = as-generator (-> char (choose-int 48, 57)), 'num-char'
-UpperChar    = as-generator (-> char (choose-int 65, 90)), 'upper-char'
-LowerChar    = as-generator (-> char (choose-int 97, 122)), 'lower-char'
+### -- Forward declarations --------------------------------------------
+Any = as-generator!
+
+
+### -- Primitive data types --------------------------------------------
+Null      = as-generator null
+Undefined = as-generator void
+Bool      = choice true, false
+Num       = label 'num'  (as-generator (s) -> choose -s, s)
+Byte      = label 'byte' (as-generator (_) -> choose 0, 255)
+Char      = label 'char' (transform char, Byte)
+Str       = label 'str'  (transform join, (repeat Char))
+
+
+### -- Specialised numeric types ---------------------------------------
+Int      = label 'int' (transform to-integer, Num)
+UInt     = label 'uint' (transform to-unsigned-integer, Num)
+Positive = label 'positive' (as-generator (s) -> choose 1, s)
+Negative = label 'negative' (as-generator (s) -> choose -1, -s)
+
+
+### -- Specialised textual types ---------------------------------------
+NumChar      = label 'num-char' (transform char, -> choose-int 48, 57)
+UpperChar    = label 'upper-char' (transform char, -> choose-int 65, 90)
+LowerChar    = label 'lower-char' (transform char, -> choose-int 97, 122)
 AlphaChar    = frequency [1, UpperChar], [9, LowerChar]
 AlphaNumChar = frequency [1, NumChar], [9, AlphaChar]
-Identifier   = combine join, LowerChar, (repeat AlphaNumChar, join)
-Str          = repeat Char, join
-AlphaStr     = repeat AlphaChar, join
-NumStr       = repeat NumChar, join
-AlphaNumStr  = repeat AlphaNumChar, join
-List         = (...as) -> repeat (choice ...as)
-Falsy        = choice false, void, null, 0, ''
-Any          = choice Nothing, Bool, Int, Num, Char, Str, List
+AlphaStr     = transform join, (repeat AlphaChar)
+NumStr       = transform join, (repeat NumChar)
+AlphaNumStr  = transform join, (repeat AlphaNumChar)
 
+Id           = do
+               start = frequency [1, '_'], [2, '$'], [9, AlphaChar]
+               chars = frequency [1, NumChar], [9, start]
+               rest  = transform join, (repeat chars)
+               
+               label 'id' (transform join, (sequence start, rest))
+
+
+### -- Container data types --------------------------------------------
+List = (...as) -> repeat (choice ...as)
+Map  = (...as) -> transform as-object, (repeat (sequence Id, (choice ...as)))
+
+
+### -- Umbrella type unions --------------------------------------------
+Nothing = choice Null, Undefined
+Falsy = choice Nothing, false, 0, ''
+Any <<<< choice Nothing, Bool, Num, Str, (List Any), (Map Any)
+
+# TODO: Date, RegExp, Truthy
 
 
 ### -- Exports ---------------------------------------------------------
 module.exports = {
-  Null
-  Undefined
-  Nothing
-  Bool
-  Num
-  PosNum
-  NegNum
-  Int
-  PosInt
-  NegInt
-  Char
-  ANSIChar
-  ASCIIChar
-  NumChar
-  UpperChar
-  LowerChar
-  AlphaChar
-  AlphaNumChar
-  Identifier
-  Str
-  AlphaStr
-  NumStr
-  AlphaNumStr
-  List
-  Falsy
-  Any
+  # Primitives
+  Null, Undefined, Bool, Num, Byte, Char, Str
+
+  # Numbers
+  Int, UInt, Positive, Negative
+
+  # Strings
+  NumChar, UpperChar, LowerChar, AlphaChar, AlphaNumChar, AlphaStr,
+  NumStr, AlphaNumStr, Id
+
+  # Constainers
+  List, Map
+
+  # Umbrella
+  Nothing, Falsy, Any
 }
