@@ -3,14 +3,17 @@ Claire
 
 [![Build Status](https://travis-ci.org/killdream/claire.png)](https://travis-ci.org/killdream/claire)
 
-
 Claire is a random testing library for both property-based testing
 (QuickCheck-like) and random program generation (ScalaCheck command's
 like), which allows you to express your code's behaviours and invariants
 in a clear way.
 
+### Platform support
 
-### Example
+[![browser support](http://ci.testling.com/killdream/claire.png)](http://ci.testling.com/killdream/claire)
+
+
+### Example 
 
 These uses the Claire API to collect data about a test. To have something that
 makes sense of the collected data and works out of the box for testing, check
