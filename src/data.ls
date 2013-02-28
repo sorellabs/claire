@@ -35,6 +35,7 @@ join = (as) -> as.join ''
 char = String.from-char-code
 to-integer = (n) -> n .|. 0
 to-unsigned-integer = (n) -> n >>> 0
+to-object = (as) -> as.reduce ((r, [k,v]) -> r <<< { "#k": v }), {}
 
 
 ### -- Forward declarations --------------------------------------------
@@ -78,7 +79,7 @@ Id           = do
 
 ### -- Container data types --------------------------------------------
 List = (...as) -> repeat (choice ...as)
-Map  = (...as) -> transform as-object, (repeat (sequence Id, (choice ...as)))
+Map  = (...as) -> transform to-object, (repeat (sequence Id, (choice ...as)))
 
 
 ### -- Umbrella type unions --------------------------------------------
