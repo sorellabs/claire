@@ -181,7 +181,7 @@ frequency = (...as) -> do
 sequence = (...as) -> do
                       Generator.derive {
                         to-string: -> "<Sequence (#{gs})>"
-                        next: -> make-value (as.map values), this
+                        next: -> make-value (as.map value), this
                       }
 
 
