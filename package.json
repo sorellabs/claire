@@ -13,10 +13,11 @@
   "devDependencies": {
     "claire-mocha": "~0.1.0",
     "LiveScript": "~1.1.1",
-    "chai": "~1.5.0"
+    "chai": "~1.5.0",
+    "mocha": "~1.8.1"
   },
   "scripts": {
-    "test": "mocha",
+    "test": "./node_modules/.bin/mocha",
     "prepublish": "lsc -o lib -c src/*.ls"
   },
   "repository": {
@@ -46,11 +47,30 @@
   },
   "testling": {
     "files": "test/*.ls",
-    "browsers": { "ie": [8, 9, 10],
-                  "firefox": [15, "nightly"],
-                  "chrome": [21, 22, "canary"],
-                  "opera": [11, 12, "next"],
-                  "safari": [5.1] },
+    "browsers": {
+      "ie": [
+        8,
+        9,
+        10
+      ],
+      "firefox": [
+        15,
+        "nightly"
+      ],
+      "chrome": [
+        21,
+        22,
+        "canary"
+      ],
+      "opera": [
+        11,
+        12,
+        "next"
+      ],
+      "safari": [
+        5.1
+      ]
+    },
     "harness": "mocha"
-  }               
+  }
 }
