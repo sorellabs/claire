@@ -30,5 +30,10 @@
   ],
   "author": "Quildreen \"Sorella\" Motta <quildreen@gmail.com>",
   "license": "MIT",
-  "readmeFilename": "README.md"
+  "readmeFilename": "README.md",
+  "calliope": {
+    "output": "docs/api",
+    "copyright": "© 2013 Quildreen \"Sorella\" Motta",
+    "packages": [{ "files": ["src/*.ls"] }]
+  }
 }
