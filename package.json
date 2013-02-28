@@ -18,7 +18,8 @@
   },
   "scripts": {
     "test": "./node_modules/.bin/mocha",
-    "prepublish": "./node_modules/.bin/lsc -o lib -c src/*.ls"
+    "prepublish": "./node_modules/.bin/lsc -o lib -c src/*.ls",
+    "pretest": "./node_modules/.bin/lsc -o lib -c src/*.ls && ./node_modules/.bin/lsc -o lib-test -c test/*.ls"
   },
   "repository": {
     "type": "git",
