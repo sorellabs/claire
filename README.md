@@ -12,31 +12,56 @@ in a clear way.
 
 ### Example
 
+These uses the Claire API to collect data about a test. To have something that
+makes sense of the collected data and works out of the box for testing, check
+out [Claire for Mocha][claire-mocha].
+
 ```js
 var claire = require('claire')
-var _ = claire.data
+var _      = claire.data
 
-// Checks if all numbers are Even
-var even_p = claire.forAll(_.int)
-                   .satisfy(function(n) { return n % 2 == 0 })
+// Simple universal quantifier
+var concat_p = claire.forAll ( _.List(_.Int), _.List(_.Int) )
+                     .satisfy(function(xs, ys) {
+                                return xs.length + ys.length
+                                    == xs.concat(ys).length })
 
-claire.check(100, even_p)
-// => (Object) { "status": "failed"
-//             , "passed": 12
-//             , "ignored": 0
-//             , "total": 12
-//             , "reason": { "args": [3] }}
+// Checking returns a Report with meta-data about the tests.
+claire.check(100, concat_p)
+// (Object <| Report) => { property: { invariant: [Function] }
+//                       , passed: [ { ok: true, labels: [], arguments: [Object] }, ... ]
+//                       , failed: []
+//                       , ignored: []
+//                       , all: [ { ok: true, labels: [], arguments: [Object] }, ... ]
+//                       , labels: {}
+//                       , veredict: 'passed' }
 
-// Checks if a subset of all numbers are Even
-var even_p2 = claire.forAll(_.int)
-                    .given(function(n){ return n % 2 == 0 })
-                    .satisfy(function(n){ return n % 2 == 0 })
 
-claire.check(100, even_p2)
-// => (Object) { "status": "passed"
-//             , "passed": 100
-//             , "ignored": 0
-//             , "total": 100 }
+// Conditional properties
+var sqrt_p = claire.forAll ( _.Int )
+                   .given  (function(n){ return n > 0 })
+                   .satisfy(function(n){ return Math.sqrt(n * n) == n })
+
+// The report can be made human-readable by just calling `.toString()'
+claire.check(100, sqrt_p).toString()
+// (String) => "+ OK passed 100 tests. 129 (56%) tests ignored."
+
+
+// Data classifiers
+var reverse_p = claire.forAll ( _.List(_.Int), _.List(_.Int) )
+                      .satisfy(function(xs, ys) {
+                                 (reverse(xs.concat(ys)) + '')
+                                 == (reverse(ys).concat(reverse(xs)) + '') })
+                      .classify(function(xs, ys) {
+                                  return xs.length == 0? 'trivial'
+                                       : ys.length == 0? 'trivial'
+                                       : /* otherwise */ 'ok' })
+                                       
+claire.check(100, reverse_p).toString()
+// (String) => "+ OK passed 100 tests. 
+//              > Collected test data:
+//                  o 85% - ok
+//                  o 15% - trivial"
 ```
 
 
@@ -54,3 +79,4 @@ npm install claire
 MIT/X11. ie.: do whatever you want.
 
 
+[claire-mocha]: http://github.com/killdream/claire-mocha.git
