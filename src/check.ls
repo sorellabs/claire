@@ -92,7 +92,7 @@ describe-veredict = (report) ->
 # :: Report -> String
 describe-ignored = (report) ->
   ignored = report.ignored.length
-  ignored-pct = as-percentage ignored, report.all.length
+  ignored-pct = percentage ignored, report.all.length
 
   if ignored-pct > 50 => "#ignored (#{ignored-pct}%) tests ignored."
   else                => ''
@@ -106,7 +106,7 @@ describe-ignored = (report) ->
 # :: Report -> String
 label-histogram = (report) ->
   total = report.all.length
-  labels = ["o #{as-percentage v.length, total}% - #k" for k, v of report.labels]
+  labels = ["o #{perentage v.length, total}% - #k" for k, v of report.labels]
 
   if labels.length => "> Collected test data:\n    #{labels.join '\n    '}"
   else             => ''
