@@ -184,7 +184,7 @@ frequency = (...as) -> do
                        representation = ([w, g]) -> w + ':' + g
 
                        (choice ...gs).derive {
-                         to-string: -> "<Frequency (#{as.map representation)>"
+                         to-string: -> "<Frequency (#{as.map representation}>"
                        }
 
 
