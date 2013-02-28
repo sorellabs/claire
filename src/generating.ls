@@ -238,7 +238,7 @@ module.exports = {
   choice
   frequency
   sequence
-  size
+  sized
   label
   transform
   repeat
