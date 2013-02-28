@@ -221,7 +221,7 @@ repeat = (gen) -> do
                     to-string: -> "<Repeat #{gen}>"
                     next: -> do
                              range  = [1 to (choose-int 0, @size)]
-                             make-value (range.map value), this
+                             make-value (range.map -> value gen), this
                   }
 
 
