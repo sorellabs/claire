@@ -139,7 +139,7 @@ Report = Base.derive {
   # Adds a single test result to the Report.
   #
   # :: @this:Report* => Result -> ()
-  add: (result) !->
+  add: (result) ->
     @all.push result
     result.labels.map (a) ~> @labels.[]"#a".push result
     switch status result
