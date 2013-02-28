@@ -82,7 +82,7 @@ make-value = (value, gen) -->
 # Executes a `Generator` and extracts the generated value.
 #
 # :: Generator a -> a
-value = (gen) -> (as-generator gen).next!value
+value = (ctx, gen) --> ((as-generator gen).next.call ctx).value
 
 
 ### -- Core implementation ---------------------------------------------
@@ -97,7 +97,7 @@ Generator = Base.derive {
   # A hint for controlling the generated value's complexity.
   #
   # :: Number
-  size: 100
+  size: 10
 
   ##### λ next
   # Generates a new random value.
@@ -155,7 +155,7 @@ choice = (...as) -> do
                       to-string: -> "<Choice (#{as})>"
                       next: -> do
                                gen = pick-one as
-                               make-value (value gen), (as-generator gen)
+                               make-value (value this, gen), (as-generator gen)
                     }
 
 
@@ -181,7 +181,7 @@ frequency = (...as) -> do
 sequence = (...as) -> do
                       Generator.derive {
                         to-string: -> "<Sequence (#{gs})>"
-                        next: -> make-value (as.map value), this
+                        next: -> make-value (as.map (value this)), this
                       }
 
 
@@ -207,7 +207,7 @@ label = (name, gen) --> (as-generator gen).derive { to-string: -> "<#name>" }
 transform = (f, gen) -> do
                         g = as-generator gen
                         g.derive {
-                          next: -> make-value (f (value g)), this
+                          next: -> make-value (f (value this, g)), this
                         }
 
 
@@ -221,7 +221,7 @@ repeat = (gen) -> do
                     to-string: -> "<Repeat #{gen}>"
                     next: -> do
                              range  = [1 to (choose-int 0, @size)]
-                             make-value (range.map -> value gen), this
+                             make-value (range.map ~> value this, gen), this
                   }
 
 
