@@ -1,7 +1,7 @@
 global <<< require 'prelude-ls'
 global <<< require 'claire-mocha'
-global <<< require '../src/data'
-{ for-all } = require '../src'
+global <<< require '../lib/data'
+{ for-all } = require '../lib'
 
 
 describe '{M} Generators' ->
@@ -27,7 +27,7 @@ describe '{M} Generators' ->
 
   describe '-- Specialised numeric types' ->
     max-int = Math.pow 2, 32
-    
+
     o 'Int' -> for-all Int .satisfy -> -max-int <= it < max-int
 
     o 'UInt' -> for-all UInt .satisfy -> 0 <= it < max-int
@@ -47,7 +47,7 @@ describe '{M} Generators' ->
     o 'AlphaChar' -> for-all AlphaChar .satisfy (== /[a-zA-Z]/)
 
     o 'AlphaNumChar' -> for-all AlphaNumChar .satisfy (== /[a-zA-Z0-9]/)
-    
+
     o 'AlphaStr' -> do
                     for-all AlphaStr
                     .given -> it.length > 0
@@ -85,7 +85,7 @@ describe '{M} Generators' ->
     o 'Map(Bool)' -> for-all (Map Bool) .satisfy (o) ->
                        ((keys o).every (== /[\$_a-zA-Z][\$_a-zA-Z0-9]*/)) && \
                        ((values o).every -> !!it is it)
-                       
+
 
   describe '-- Umbrella type unions' ->
     o 'Nothing' -> for-all Nothing .satisfy (~= null)

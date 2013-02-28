@@ -1,8 +1,8 @@
 global <<< require 'claire-mocha'
-global <<< require '../src/generating'
-global <<< require '../src/data'
+global <<< require '../lib/generating'
+global <<< require '../lib/data'
 global <<< require 'prelude-ls'
-{ for-all } = require '../src'
+{ for-all } = require '../lib'
 { expect } = require 'chai'
 
 e = it
