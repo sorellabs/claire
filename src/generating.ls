@@ -204,11 +204,11 @@ label = (name, gen) --> (as-generator gen).derive { to-string: -> "<#name>" }
 # `Generator`.
 #
 # :: (a -> b) -> Generator a -> Generator b
-transform = (gen) -> do
-                     g = as-generator gen
-                     g.derive {
-                       next: -> make-value (value g), this
-                     }
+transform = (f, gen) -> do
+                        g = as-generator gen
+                        g.derive {
+                          next: -> make-value (f (value g)), this
+                        }
 
 
 #### λ repeat
