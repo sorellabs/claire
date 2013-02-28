@@ -11,7 +11,9 @@
     "prelude-ls": "~0.6.0"
   },
   "devDependencies": {
-    "claire-mocha": "~0.1.0"
+    "claire-mocha": "~0.1.0",
+    "LiveScript": "~1.1.1",
+    "chai": "~1.5.0"
   },
   "scripts": {
     "test": "mocha",
@@ -34,6 +36,12 @@
   "calliope": {
     "output": "docs/api",
     "copyright": "© 2013 Quildreen \"Sorella\" Motta",
-    "packages": [{ "files": ["src/*.ls"] }]
+    "packages": [
+      {
+        "files": [
+          "src/*.ls"
+        ]
+      }
+    ]
   }
 }
