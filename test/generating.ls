@@ -1,5 +1,7 @@
 global <<< require 'claire-mocha'
 global <<< require '../src/generating'
+global <<< require '../src/data'
+global <<< require 'prelude-ls'
 { for-all } = require '../src'
 { expect } = require 'chai'
 
@@ -30,8 +32,13 @@ describe '{M} Generating' ->
                          .satisfy ([a, b]) -> (a is 'a') && (b is 'b')
 
   o 'λ sized' -> do
-                 for-all (sized 5, (repeat 'a'))
-                 .satisfy -> it.length < 5
+                 for-all (sized 5, (choice Num, Str, (List Int), (Map Int)))
+                 .satisfy -> switch typeof! it
+                    | \Number => -5 <= it < 5
+                    | \String => it.length < 5
+                    | \Array  => it.length < 5
+                    | \Object => (keys it).length < 5
+                 .classify (typeof!)
 
   o 'λ label' -> do
                  g = (label 'a', 'b')
@@ -46,4 +53,3 @@ describe '{M} Generating' ->
                   for-all (repeat 'a')
                   .given   -> it.length > 0
                   .satisfy -> it.every (is 'a')
-                     
