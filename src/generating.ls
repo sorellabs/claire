@@ -188,6 +188,13 @@ sequence = (...as) -> do
 sized = (n, gen) --> (as-generator gen).derive { size: n }
 
 
+#### λ label
+# Constructs a new, custom labelled, `Generator`.
+#
+# :: String -> Generator a -> Generator a
+label = (name, gen) --> (as-generator gen).derive { to-string: -> "<#name>" }
+
+
 #### λ transform
 # Constructs a new `Generator` that transforms the value of another
 # `Generator`.
@@ -228,6 +235,7 @@ module.exports = {
   frequency
   sequence
   size
+  label
   transform
   repeat
 }
