@@ -74,9 +74,32 @@ npm install claire
 ```
 
 
+### Documentation
+
+A reference of the API can be built using [Calliope][]:
+
+```js
+$ npm install -g calliope
+$ calliope build
+```
+
+A fully narrated documentation explaining the concepts behind the
+library is planned for a future release.
+
+
+### Tests
+
+You can run all tests using Mocha:
+
+```js
+$ npm test
+```
+
+
 ### Licence
 
 MIT/X11. ie.: do whatever you want.
 
 
 [claire-mocha]: http://github.com/killdream/claire-mocha.git
+[Calliope]: http://github.com/killdream/calliope.git
