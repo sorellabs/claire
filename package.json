@@ -43,5 +43,14 @@
         ]
       }
     ]
-  }
+  },
+  "testling": {
+    "files": "test/*.ls",
+    "browsers": { "ie": [8, 9, 10],
+                  "firefox": [15, "nightly"],
+                  "chrome": [21, 22, "canary"],
+                  "opera": [11, 12, "next"],
+                  "safari": [5.1] },
+    "harness": "mocha"
+  }               
 }
