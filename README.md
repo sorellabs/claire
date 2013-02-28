@@ -1,6 +1,9 @@
 Claire
 ======
 
+[![Build Status](https://travis-ci.org/killdream/claire.png)](https://travis-ci.org/killdream/claire)
+
+
 Claire is a random testing library for both property-based testing
 (QuickCheck-like) and random program generation (ScalaCheck command's
 like), which allows you to express your code's behaviours and invariants
