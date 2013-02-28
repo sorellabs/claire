@@ -128,6 +128,7 @@ as-generator = (a) ->
   | 'next' of (Object a) => a
   | otherwise            => do
                             Generator.derive {
+                              to-string: -> "<#a>"
                               next: -> make-value (compute a, this), this
                             }
 
