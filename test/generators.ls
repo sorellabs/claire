@@ -1,6 +1,6 @@
 { fact }    = require 'claire-mocha'
-{ for-all } = require '../lib/index'
-global <<< require '../lib/data'
+{ for-all } = require '../src/index'
+global <<< require '../src/data'
 global <<< require 'prelude-ls'
 
 
