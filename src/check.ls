@@ -112,6 +112,29 @@ label-histogram = (report) ->
   else             => ''
 
 
+#### λ describe-failures
+# :internal:
+# Provides a human-readable description of the failures that happened.
+#
+# :: Report -> String
+describe-failures = (report) ->
+  label = (as) -> 
+    | as.length => ": The following labels were provided: #{JSON.stringify as}"
+    | otherwise => ''
+   
+  arg = (a, n) -> "  #n - #{a.value} (#{a.generator})"
+  
+  errors = report.failed.map (a, n) -> """
+                                       : Failure \##{n + 1}
+                                       #{label a.labels}
+                                       : The following arguments were provided:
+                                       #{a.arguments.map arg .join '\n  '}
+                                       """
+  switch
+  | errors.join '' .trim! => errors.join '\n---\n'
+  | otherwise             => ''
+
+
 ### -- Helper data structures ------------------------------------------
 
 #### {} Report
@@ -155,6 +178,7 @@ Report = Base.derive {
     """
     #{describe-veredict this} #{describe-ignored this}
     #{label-histogram this}
+    #{describe-failures this}
     """
 }
 
