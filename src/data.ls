@@ -28,9 +28,9 @@
 ### -- Dependencies ----------------------------------------------------
 { choose-int, choose } = require './random'
 
-{ as-generator,
-  choice, frequency, sequence,
-  size, label, transform, repeat } = require './generating'
+{ as-generator                   \
+, choice, frequency, sequence    \
+, size, label, transform, repeat } = require './generating'
 
 
 ### -- Helpers ---------------------------------------------------------
