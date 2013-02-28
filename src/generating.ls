@@ -97,7 +97,7 @@ Generator = Base.derive {
   # A hint for controlling the generated value's complexity.
   #
   # :: Number
-  size: 10
+  size: 100
 
   ##### λ next
   # Generates a new random value.
