@@ -49,15 +49,6 @@
 callable-p = (a) -> typeof a is 'function'
 
 
-#### λ make-value
-# :internal:
-# Constructs a `Value` type.
-#
-# :: a -> Generator a -> Value a
-make-value = (value, gen) -->
-  generator : gen
-  value     : value
-
 #### λ compute
 # :internal:
 # Computes a value lifted to a `Generator`.
@@ -69,8 +60,17 @@ compute = (a, gen) ->
   | otherwise    => a
 
 
+### -- Working with Values ---------------------------------------------
+
+#### λ make-value
+# Constructs a `Value` type.
+#
+# :: a -> Generator a -> Value a
+make-value = (value, gen) -->
+  generator : gen
+  value     : value
+
 #### λ value
-# :internal:
 # Executes a `Generator` and extracts the generated value.
 #
 # :: Generator a -> a
@@ -218,12 +218,16 @@ repeat = (gen) -> do
 
 ### -- Exports ---------------------------------------------------------
 module.exports = {
-  Generator
   make-value
+  value
+
+  Generator
+  
   as-generator
   choice
-  sized
-  repeat
   frequency
-  combine
+  sequence
+  size
+  transform
+  repeat
 }
