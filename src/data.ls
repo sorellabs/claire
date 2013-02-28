@@ -64,7 +64,7 @@ to-integer = (n) -> n .|. 0
 # Converts a Number to an unsigned Integer.
 #
 # :: Number -> UInt32
-to-unsigned-integer = (n) -> n >>> 0
+to-unsigned-integer = (n) -> n .>>>. 0
 
 
 #### λ to-object
