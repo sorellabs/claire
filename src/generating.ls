@@ -195,15 +195,15 @@ frequency = (...as) -> do
 # You must provide a reduction function that tells the generator how to
 # combine the generated values.
 #
-# :: ([a] -> b) -> Generator a... -> Generator b
-combine = (reduce, ...as) --> do
-                              gs = as.map as-generator
-                              Generator.derive {
-                                to-string: -> "<Combine (#{gs})>"
-                                next: -> do
-                                         values = gs.map (g) -> g.next!value
-                                         make-value (reduce values), this
-                              }
+# :: ([a] -> b), Generator a... -> Generator b
+combine = (reduce, ...as) -> do
+                             gs = as.map as-generator
+                             Generator.derive {
+                               to-string: -> "<Combine (#{gs})>"
+                               next: -> do
+                                        values = gs.map (g) -> g.next!value
+                                        make-value (reduce values), this
+                             }
 
 
 
