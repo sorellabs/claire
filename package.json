@@ -47,7 +47,7 @@
     ]
   },
   "testling": {
-    "files": "test/*.ls",
+    "files": "lib-test/*.js",
     "browsers": {
       "ie": [
         8,
