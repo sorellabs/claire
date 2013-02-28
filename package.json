@@ -10,7 +10,9 @@
     "boo": "~1.2.4",
     "prelude-ls": "~0.6.0"
   },
-  "devDependencies": {},
+  "devDependencies": {
+    "claire-mocha": "~0.1.0"
+  },
   "scripts": {
     "test": "mocha",
     "prepublish": "lsc -o lib -c src/*.ls"
