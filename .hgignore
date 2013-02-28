@@ -17,4 +17,3 @@ node_modules
 docs/api
 .calliope
 lib/
-lib-test/
