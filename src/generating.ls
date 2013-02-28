@@ -123,16 +123,11 @@ Generator = Base.derive {
 # This is used by all combinators to allow users to pass regular values
 # as if they were proper `Generators`, making the API cleaner.
 #
-# An optional `label` can be given to provide a friendly name for the
-# constructed generator.
-#
 # :: Generator a -> Generator a
-# :: a, String -> Generator a
-as-generator = (a, label) -> 
+as-generator = (a) -> 
   | 'next' of (Object a) => a
   | otherwise            => do
                             Generator.derive {
-                              to-string: -> "<#{label or a}>"
                               next: -> make-value (compute a, this), this
                             }
 
