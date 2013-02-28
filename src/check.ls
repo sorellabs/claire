@@ -24,14 +24,53 @@
 # OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
 # WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-{ Base } = require 'boo'
-frozen = Object.freeze
+### -- Dependencies ----------------------------------------------------
+{ Base }           = require 'boo'
 { values, reduce } = require 'prelude-ls'
+
+### -- Aliases ---------------------------------------------------------
+frozen  = Object.freeze
 {round} = Math
 
-as-percentage = (num, total) -> round (num / total) * 100
-  
 
+### -- General helpers -------------------------------------------------
+
+#### λ percentage
+# :internal:
+# Computes the percentage of some N wrt some Total.
+#
+# :: Number, Number -> Number
+percentage = (num, total) -> round (num / total) * 100
+
+
+### -- Helpers for handling Results ------------------------------------
+
+#### λ status
+# :internal:
+# Retrieves a normalised Status tag for the Result.
+#
+# :: Result -> ResultStatus
+status = (result) ->
+  | result.ok is true  => \passed
+  | result.ok is false => \failed
+  | otherwise          => \ignored
+
+
+#### λ failed-p
+# :internal:
+# Checks if a Result failed.
+#
+# :: Result -> Bool
+failed-p = (result) -> result.ok is false
+
+
+### -- Helpers for presenting a Report ---------------------------------
+
+#### λ describe-veredict
+# :internal:
+# Provides a human-readable veredict of a test report.
+#
+# :: Report -> String
 describe-veredict = (report) ->
   passed      = report.passed.length
   failed      = report.failed.length
@@ -44,14 +83,27 @@ describe-veredict = (report) ->
   | \abandoned => "? Aborted after #{all} tests."
   | otherwise  => "/ Unknown veredict. Likely this test report lacks any data."
 
+
+#### λ describe-ignored
+# :internal:
+# Provides a human-readable description of the ignored tests, if they're
+# above a certain non-trivial threshold (50%).
+#
+# :: Report -> String
 describe-ignored = (report) ->
   ignored = report.ignored.length
   ignored-pct = as-percentage ignored, report.all.length
 
-  if ignored-pct > 25 => "#ignored (#{ignored-pct}%) tests ignored."
+  if ignored-pct > 50 => "#ignored (#{ignored-pct}%) tests ignored."
   else                => ''
 
 
+#### λ label-histogram
+# :internal:
+# Provides a human-readable histogram of the various classifications
+# provided for the test data.
+#
+# :: Report -> String
 label-histogram = (report) ->
   total = report.all.length
   labels = ["o #{as-percentage v.length, total}% - #k" for k, v of report.labels]
@@ -60,7 +112,20 @@ label-histogram = (report) ->
   else             => ''
 
 
-TestReport = Base.derive {
+### -- Helper data structures ------------------------------------------
+
+#### {} Report
+# 
+# Gathers meta-data from a property test and provides ways of displaying
+# those data in an human-readable way.
+#
+# :: Base <| Report
+Report = Base.derive {
+
+  ##### λ init
+  # Initialises a Report instance.
+  #
+  # :: @this:Report* => Property -> this
   init: (@property) ->
     @passed   = []
     @failed   = []
@@ -70,7 +135,11 @@ TestReport = Base.derive {
     @veredict = null
 
 
-  add: (result) ->
+  ##### λ add
+  # Adds a single test result to the Report.
+  #
+  # :: @this:Report* => Result -> ()
+  add: (result) !->
     @all.push result
     result.labels.map (a) ~> @labels.[]"#a".push result
     switch status result
@@ -78,6 +147,10 @@ TestReport = Base.derive {
     | \failed  => @failed.push result
     | \ignored => @ignored.push result
 
+  ##### λ to-string
+  # Provides a human-readable presentation of this Report.
+  #
+  # :: @this:Report* => () -> String
   to-string: ->
     """
     #{describe-veredict this} #{describe-ignored this}
@@ -85,14 +158,18 @@ TestReport = Base.derive {
     """
 }
 
-status = (result) ->
-  | result.ok is true  => \passed
-  | result.ok is false => \failed
-  | otherwise          => \ignored
 
-failed-p = (result) -> result.ok is false
+### -- Checking properties ---------------------------------------------
 
-
+#### λ check
+# Runs a property repeatedly, until it holds more times than a given
+# threshold.
+#
+# If the Property fails to hold for certain random inputs, or if the
+# Property ignores too many of the inputs, the test fails immediately
+# and a Report describing the failure is returned.
+#
+# :: Number -> Property -> Report
 check = (max, property) -->
   report     = TestReport.make property
   ignored    = 0
