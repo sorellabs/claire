@@ -1,3 +1,2 @@
 --ui bdd
 --reporter spec
---compilers ls:LiveScript
