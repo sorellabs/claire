@@ -10,6 +10,12 @@ in a clear way.
 
 ### Platform support
 
+Claire should work neatly in all ES5 platforms. ES3 platforms (IE8-,
+etc) can use [es5-shim][] to provide the fallbacks necessary.
+
+Things are frozen to ensure immutability, but legacy engines can do
+without, so `Object.freeze = function(a) { return a }` is okay.
+
 [![browser support](http://ci.testling.com/killdream/claire.png)](http://ci.testling.com/killdream/claire)
 
 
@@ -106,3 +112,4 @@ MIT/X11. ie.: do whatever you want.
 
 [claire-mocha]: http://github.com/killdream/claire-mocha.git
 [Calliope]: http://github.com/killdream/calliope.git
+[es5-shim]: https://github.com/kriskowal/es5-shim
