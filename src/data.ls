@@ -24,17 +24,54 @@
 # OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
 # WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
+
+### -- Dependencies ----------------------------------------------------
 { choose-int, choose } = require './random'
 
 { as-generator,
   choice, frequency, sequence,
   size, label, transform, repeat } = require './generating'
 
+
 ### -- Helpers ---------------------------------------------------------
-join = (as) -> as.join ''
+
+#### λ join
+# :internal:
+# Joins a list of things without a separator
+#
+# :: [a] -> String
+join = (.join '')
+
+
+#### λ char
+# :internal:
+# Converts some character code to a String character.
+#
+# :: Number -> String
 char = String.from-char-code
+
+
+#### λ to-integer
+# :internal:
+# Converts a Number to an Integer.
+#
+# :: Number -> Int32
 to-integer = (n) -> n .|. 0
+
+
+#### λ to-unsigned-integer
+# :internal:
+# Converts a Number to an unsigned Integer.
+#
+# :: Number -> UInt32
 to-unsigned-integer = (n) -> n >>> 0
+
+
+#### λ to-object
+# :internal:
+# Folds a list of pairs into an object.
+#
+# :: [String, a] -> { String -> a }
 to-object = (as) -> as.reduce ((r, [k,v]) -> r <<< { "#k": v }), {}
 
 
@@ -84,8 +121,8 @@ Map  = (...as) -> transform to-object, (repeat (sequence Id, (choice ...as)))
 
 ### -- Umbrella type unions --------------------------------------------
 Nothing = choice Null, Undefined
-Falsy = choice Nothing, false, 0, ''
-Any <<<< choice Nothing, Bool, Num, Str, (List Any), (Map Any)
+Falsy   = choice Nothing, false, 0, ''
+Any  <<<< choice Nothing, Bool, Num, Str, (List Any), (Map Any)
 
 # TODO: Date, RegExp, Truthy
 
