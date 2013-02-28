@@ -17,10 +17,9 @@
     "mocha": "~1.8.1"
   },
   "scripts": {
-    "test-cc": "./node_modules/.bin/lsc -o lib-test -c test/*.ls",
+    "test-cc": "./node_modules/.bin/lsc -o lib-test -c test/*.ls && ./node_modules/.bin/lsc -o lib -c src/*.ls",
     "test": "./node_modules/.bin/mocha lib-test/*.js",
     "pretest": "npm run-script test-cc",
-    "install": "./node_modules/.bin/lsc -o lib -c src/*.ls",
     "prepublish": "./node_modules/.bin/lsc -o lib -c src/*.ls"
   },
   "repository": {
