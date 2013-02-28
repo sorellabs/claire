@@ -49,6 +49,14 @@
 callable-p = (a) -> typeof a is 'function'
 
 
+#### λ generator-p
+# :internal:
+# Checks if something is a `Generator`
+#
+# :: a -> Bool
+generator-p = (a) -> 'next' of (Object a)
+
+
 #### λ compute
 # :internal:
 # Computes a value lifted to a `Generator`.
@@ -125,12 +133,12 @@ Generator = Base.derive {
 #
 # :: Generator a -> Generator a
 as-generator = (a) -> 
-  | 'next' of (Object a) => a
-  | otherwise            => do
-                            Generator.derive {
-                              to-string: -> "<#a>"
-                              next: -> make-value (compute a, this), this
-                            }
+  | generator-p a  => a
+  | otherwise      => do
+                      Generator.derive {
+                        to-string: -> "<#a>"
+                        next: -> make-value (compute a, this), this
+                      }
 
 
 #### λ choice
