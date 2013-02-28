@@ -24,6 +24,8 @@
 # OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
 # WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
+
+### -- Helpers ---------------------------------------------------------
 merge = (...as) -> as.reduce (<<<)
 
 
@@ -34,5 +36,3 @@ module.exports = merge do
                        * require './generating'
                        * require './check'
                        * data: require './data'
-
-console.log (Object.keys module.exports)
