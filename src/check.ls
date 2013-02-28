@@ -106,7 +106,7 @@ describe-ignored = (report) ->
 # :: Report -> String
 label-histogram = (report) ->
   total = report.all.length
-  labels = ["o #{perentage v.length, total}% - #k" for k, v of report.labels]
+  labels = ["o #{percentage v.length, total}% - #k" for k, v of report.labels]
 
   if labels.length => "> Collected test data:\n    #{labels.join '\n    '}"
   else             => ''
