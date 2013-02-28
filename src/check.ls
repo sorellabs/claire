@@ -171,7 +171,7 @@ Report = Base.derive {
 #
 # :: Number -> Property -> Report
 check = (max, property) -->
-  report     = TestReport.make property
+  report     = Report.make property
   ignored    = 0
   should-run = true
   while max and should-run
