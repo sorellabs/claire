@@ -1,12 +1,7 @@
-{ fact }    = require 'claire-mocha'
-{ for-all } = require '../src/index'
-global <<< require '../src/data'
 global <<< require 'prelude-ls'
-
-
-t = it
-f = fact times: 100, verbose: false
-o = (label, p) -> t label, f p!
+global <<< require 'claire-mocha'
+global <<< require '../src/data'
+{ for-all } = require '../src'
 
 
 describe '{M} Generators' ->
