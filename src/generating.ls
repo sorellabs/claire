@@ -26,9 +26,9 @@
 
 
 ### -- Dependencies ----------------------------------------------------
-{ Base, derive }              = require 'boo'
-{ concat-map, replicate, id } = require 'prelude-ls'
-{ pick-one, choose-int }      = require './random'
+{ Base, derive }          = require 'boo'
+{ concat-map, replicate } = require 'prelude-ls'
+{ pick-one, choose-int }  = require './random'
 
 
 ### -- Interfaces ------------------------------------------------------
@@ -67,6 +67,14 @@ make-value = (value, gen) -->
 compute = (a, gen) ->
   | callable-p a => a gen.size
   | otherwise    => a
+
+
+#### λ value
+# :internal:
+# Executes a `Generator` and extracts the generated value.
+#
+# :: Generator a -> a
+value = (gen) -> (as-generator gen).next!value
 
 
 ### -- Core implementation ---------------------------------------------
@@ -139,39 +147,12 @@ as-generator = (a, label) ->
 # 
 # :: Generator a... -> Generator b
 choice = (...as) -> do
-                    as := as.map as-generator
                     Generator.derive {
                       to-string: -> "<Choice (#{as})>"
                       next: -> do
                                gen = pick-one as
-                               make-value gen.next!.value, gen
+                               make-value (value gen), (as-generator gen)
                     }
-
-
-#### λ sized
-# Constructs a new `Generator` with a new complexity `size` hint.
-#
-# :: Number -> Generator a -> Generator b
-sized = (n, gen) --> (as-generator gen).derive { size: n }
-
-
-#### λ repeat
-# Constructs a new `Generator` that repeats a given `Generator`.
-#
-# You can provide a reducer function to post-process the generated
-# values.
-#
-# :: Generator a -> Generator b
-# :: Generator a, ([a] -> b) -> Generator b
-repeat = (gen, reduce = id) -> do
-                               gen := as-generator gen
-                               gen.derive {
-                                 to-string: -> "<Repeat #{gen}>"
-                                 next: -> do
-                                          range  = [1 to (choose-int 0, @size)]
-                                          values = range.map (-> gen.next!value)
-                                          make-value (reduce values), this
-                               }
 
 
 #### λ frequency
@@ -188,22 +169,49 @@ frequency = (...as) -> do
                        }
 
 
-#### λ combine
+#### λ sequence
 # Constructs a new `Generator` that yields the combination of several
 # `Generator`s.
 #
-# You must provide a reduction function that tells the generator how to
-# combine the generated values.
+# :: Generator a... -> Generator b
+sequence = (...as) -> do
+                      Generator.derive {
+                        to-string: -> "<Sequence (#{gs})>"
+                        next: -> make-value (as.map values), this
+                      }
+
+
+#### λ sized
+# Constructs a new `Generator` with a new complexity `size` hint.
 #
-# :: ([a] -> b), Generator a... -> Generator b
-combine = (reduce, ...as) -> do
-                             gs = as.map as-generator
-                             Generator.derive {
-                               to-string: -> "<Combine (#{gs})>"
-                               next: -> do
-                                        values = gs.map (g) -> g.next!value
-                                        make-value (reduce values), this
-                             }
+# :: Number -> Generator a -> Generator b
+sized = (n, gen) --> (as-generator gen).derive { size: n }
+
+
+#### λ transform
+# Constructs a new `Generator` that transforms the value of another
+# `Generator`.
+#
+# :: (a -> b) -> Generator a -> Generator b
+transform = (gen) -> do
+                     g = as-generator gen
+                     g.derive {
+                       next: -> make-value (value g), this
+                     }
+
+
+#### λ repeat
+# Constructs a new `Generator` that repeats a given `Generator`.
+#
+# :: Generator a -> Generator b
+repeat = (gen) -> do
+                  gen := as-generator gen
+                  gen.derive {
+                    to-string: -> "<Repeat #{gen}>"
+                    next: -> do
+                             range  = [1 to (choose-int 0, @size)]
+                             make-value (range.map value), this
+                  }
 
 
 
