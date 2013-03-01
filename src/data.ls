@@ -28,9 +28,9 @@
 ### -- Dependencies ----------------------------------------------------
 { choose-int, choose } = require './random'
 
-{ as-generator                   \
-, choice, frequency, sequence    \
-, size, label, transform, repeat } = require './generating'
+{ as-generator                              \
+, choice, frequency, sequence               \
+, recursive, size, label, transform, repeat } = require './generating'
 
 
 ### -- Helpers ---------------------------------------------------------
@@ -73,10 +73,6 @@ to-unsigned-integer = (n) -> n .>>>. 0
 #
 # :: [String, a] -> { String -> a }
 to-object = (as) -> as.reduce ((r, [k,v]) -> r <<< { "#k": v }), {}
-
-
-### -- Forward declarations --------------------------------------------
-Any = as-generator!
 
 
 ### -- Primitive data types --------------------------------------------
@@ -122,7 +118,7 @@ Map  = (...as) -> transform to-object, (repeat (sequence Id, (choice ...as)))
 ### -- Umbrella type unions --------------------------------------------
 Nothing = choice Null, Undefined
 Falsy   = choice Nothing, false, 0, ''
-Any  <<<< choice Nothing, Bool, Num, Str, (List Any), (Map Any)
+Any     = choice Nothing, Bool, Num, Str, (recursive -> (List Any)), (recursive -> (Map Any))
 
 # TODO: Date, RegExp, Truthy
 
