@@ -1,6 +1,7 @@
 global <<< require 'prelude-ls'
 global <<< require 'claire-mocha'
 global <<< require '../lib/data'
+{ sized } = require '../lib/generating'
 { for-all } = require '../lib'
 
 
@@ -82,9 +83,9 @@ describe '{M} Generators' ->
                                  | typeof x is 'number' => 0 <= x < 255
                                  | otherwise            => !!x is x)
 
-    o 'Map(Bool)' -> for-all (Map Bool) .satisfy (o) ->
-                       ((keys o).every (== /[\$_a-zA-Z][\$_a-zA-Z0-9]*/)) && \
-                       ((values o).every -> !!it is it)
+    o 'Map(Bool)' -> for-all (sized 20, (Map Bool)) .satisfy (o) ->
+                       ((keys o).every  (== /[\$_a-zA-Z][\$_a-zA-Z0-9]*/)) && \
+                       ((values o).every -> it == !!it)
 
 
   describe '-- Umbrella type unions' ->

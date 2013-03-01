@@ -1,8 +1,9 @@
 (function(){
-  var forAll, toString$ = {}.toString;
+  var sized, forAll, toString$ = {}.toString;
   import$(global, require('prelude-ls'));
   import$(global, require('claire-mocha'));
   import$(global, require('../lib/data'));
+  sized = require('../lib/generating').sized;
   forAll = require('../lib').forAll;
   describe('{M} Generators', function(){
     describe('-- Primitive data types', function(){
@@ -157,11 +158,11 @@
         });
       });
       return o('Map(Bool)', function(){
-        return forAll(Map(Bool)).satisfy(function(o){
+        return forAll(sized(20, Map(Bool))).satisfy(function(o){
           return keys(o).every((function(it){
             return /[\$_a-zA-Z][\$_a-zA-Z0-9]*/.exec(it);
           })) && values(o).every(function(it){
-            return !!it === it;
+            return it === !!it;
           });
         });
       });
