@@ -5,6 +5,16 @@ global <<< require '../lib/data'
 { for-all } = require '../lib'
 
 
+### -- Helpers ---------------------------------------------------------
+size = (o) -> (keys o).length
+
+
+### This assumes `o` has no circular references
+depth = (o, n = 0) -> switch typeof! o
+  | <[ Array Object ]> => fold ((x, a) -> x >? (depth a, n+1)), (n + 1), o
+  | otherwise  => n
+
+### -- Specification ---------------------------------------------------
 describe '{M} Generators' ->
   describe '-- Primitive data types' ->
     o 'Null' -> for-all Null .satisfy (is null)
@@ -92,3 +102,16 @@ describe '{M} Generators' ->
     o 'Nothing' -> for-all Nothing .satisfy (~= null)
 
     o 'Falsy' -> for-all Falsy .satisfy -> !it
+
+    o 'Any' -> do
+               for-all (sized (-> 20), Any)
+               .satisfy -> switch typeof! it
+                 | \Array    => ((depth it) < 5) && (it.length < 20)
+                 | \Object   => ((depth it) < 5) && ((keys it).length < 20)
+                 | \String   => it.length < 20
+                 | \Number   => -20 <= it < 20
+                 | otherwise => true
+               .classify -> switch typeof! it
+                 | \Array    => "Array: #{depth it}"
+                 | \Object   => "Object: #{depth it}"
+                 | otherwise => typeof! it
