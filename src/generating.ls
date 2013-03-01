@@ -61,10 +61,10 @@ generator-p = (a) -> 'next' of (Object a)
 # :internal:
 # Computes a value lifted to a `Generator`.
 #
-# :: a -> Generator a -> a
-# :: (a -> b) -> Generator b -> b
-compute = (a, gen) ->
-  | callable-p a => a gen.size
+# :: Number -> a -> Generator a -> a
+# :: Number -> (a -> b) -> Generator b -> b
+compute = (size, a, gen) ->
+  | callable-p a => a (size or gen.size)
   | otherwise    => a
 
 
@@ -81,8 +81,8 @@ make-value = (value, gen) -->
 #### λ value
 # Executes a `Generator` and extracts the generated value.
 #
-# :: Generator a -> a
-value = (ctx, gen) --> ((as-generator gen).next.call ctx).value
+# :: Number -> Generator a -> a
+value = (n, ctx, gen) --> ((as-generator gen).next.call ctx, n).value
 
 
 ### -- Core implementation ---------------------------------------------
@@ -102,8 +102,8 @@ Generator = Base.derive {
   ##### λ next
   # Generates a new random value.
   #
-  # :: () -> Value a
-  next: -> ...
+  # :: Number -> Value a
+  next: (n) -> ...
 
   ##### λ shrink
   # Continually shrinks a value into the most minimal case within the
@@ -137,7 +137,7 @@ as-generator = (a) ->
   | otherwise      => do
                       Generator.derive {
                         to-string: -> "<#a>"
-                        next: -> make-value (compute a, this), this
+                        next: (n) -> make-value (compute n, a, this), this
                       }
 
 
@@ -153,9 +153,9 @@ as-generator = (a) ->
 choice = (...as) -> do
                     Generator.derive {
                       to-string: -> "<Choice (#{as})>"
-                      next: -> do
-                               gen = pick-one as
-                               make-value (value this, gen), (as-generator gen)
+                      next: (n) -> do
+                                   gen = as-generator (pick-one as)
+                                   make-value (value n, this, gen), gen
                     }
 
 
@@ -180,8 +180,8 @@ frequency = (...as) -> do
 # :: Generator a... -> Generator b
 sequence = (...as) -> do
                       Generator.derive {
-                        to-string: -> "<Sequence (#{gs})>"
-                        next: -> make-value (as.map (value this)), this
+                        to-string: -> "<Sequence (#{as.map as-generator})>"
+                        next: (n) -> make-value (as.map (value n, this)), this
                       }
 
 
@@ -189,7 +189,9 @@ sequence = (...as) -> do
 # Constructs a new `Generator` with a new complexity `size` hint.
 #
 # :: Number -> Generator a -> Generator b
-sized = (n, gen) --> (as-generator gen).derive { size: n }
+sized = (n, gen) --> do
+                     g = as-generator gen
+                     g.derive { next: -> g.next n }
 
 
 #### λ label
@@ -207,7 +209,7 @@ label = (name, gen) --> (as-generator gen).derive { to-string: -> "<#name>" }
 transform = (f, gen) --> do
                          g = as-generator gen
                          g.derive {
-                           next: -> make-value (f (value this, g)), this
+                           next: (n) -> make-value (f (value n, this, g)), this
                          }
 
 
@@ -219,9 +221,10 @@ repeat = (gen) -> do
                   gen := as-generator gen
                   gen.derive {
                     to-string: -> "<Repeat #{gen}>"
-                    next: -> do
-                             range  = [1 to (choose-int 0, @size)]
-                             make-value (range.map ~> value this, gen), this
+                    next: (n) -> do
+                                 size  = n ? @size
+                                 range = [1 to (choose-int 0, size)]
+                                 make-value (range.map ~> value size, this, gen), this
                   }
 
 
