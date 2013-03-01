@@ -83,7 +83,7 @@ describe '{M} Generators' ->
                                  | typeof x is 'number' => 0 <= x < 255
                                  | otherwise            => !!x is x)
 
-    o 'Map(Bool)' -> for-all (sized 20, (Map Bool)) .satisfy (o) ->
+    o 'Map(Bool)' -> for-all (sized (-> 20), (Map Bool)) .satisfy (o) ->
                        ((keys o).every  (== /[\$_a-zA-Z][\$_a-zA-Z0-9]*/)) && \
                        ((values o).every -> it == !!it)
 

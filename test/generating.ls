@@ -32,7 +32,7 @@ describe '{M} Generating' ->
                          .satisfy ([a, b]) -> (a is 'a') && (b is 'b')
 
   o 'λ sized' -> do
-                 for-all (sized 5, (choice Num, Str, (List Int), (Map Int)))
+                 for-all (sized (-> 5), (choice Num, Str, (List Int), (Map Int)))
                  .satisfy -> switch typeof! it
                     | \Number => -5 <= it < 5
                     | \String => it.length < 5

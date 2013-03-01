@@ -188,10 +188,10 @@ sequence = (...as) -> do
 #### λ sized
 # Constructs a new `Generator` with a new complexity `size` hint.
 #
-# :: Number -> Generator a -> Generator b
-sized = (n, gen) --> do
+# :: (Number -> Number) -> Generator a -> Generator b
+sized = (f, gen) --> do
                      g = as-generator gen
-                     g.derive { next: -> g.next n }
+                     g.derive { next: (n) -> g.next (f n) }
 
 
 #### λ label
