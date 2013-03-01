@@ -1,3 +1,5 @@
+global.claire-config = times: 1
+
 global <<< require 'claire-mocha'
 global <<< require '../lib/generating'
 global <<< require '../lib/data'
@@ -30,6 +32,12 @@ describe '{M} Generating' ->
   o 'λ sequence<a,b>' -> do
                          for-all (sequence 'a', 'b')
                          .satisfy ([a, b]) -> (a is 'a') && (b is 'b')
+
+  o 'λ recursive<a>' -> do
+                        a = sequence('a', (recursive (n) -> | n == 0 => 'a'
+                                                            | _      =>  a))
+                        for-all (sized (-> 20), a)
+                        .satisfy  -> ("#it".replace /,/g, '').length is 6
 
   o 'λ sized' -> do
                  for-all (sized (-> 5), (choice Num, Str, (List Int), (Map Int)))
