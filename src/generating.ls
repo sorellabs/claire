@@ -31,6 +31,10 @@
 { pick-one, choose-int }  = require './random'
 
 
+### -- Aliases ---------------------------------------------------------
+floor = Math.floor
+
+
 ### -- Interfaces ------------------------------------------------------
 
 #### type Value a
@@ -194,6 +198,25 @@ sized = (f, gen) --> do
                      g.derive { next: (n) -> g.next (f n) }
 
 
+#### λ recursive
+# Constructs a new `Generator` that takes a function or recursive
+# generator, and halves the size at each recursive invocation.
+#
+# The function is late bound, so you can use it for direct and indirect
+# recursive generators easily :3
+#
+# :: (Number -> Generator a) -> Generator b
+# :: Generator a -> Generator b
+recursive = (gen) -> do
+                     Generator.derive {
+                       to-string: -> "<Recursive #{compute 1, gen, this}>"
+                       next: (n) -> do
+                                    n := floor ((n ? @size) / 2)
+                                    g  = compute n, gen, this
+                                    make-value (value n, this, g), this
+                     }
+
+
 #### λ label
 # Constructs a new, custom labelled, `Generator`.
 #
@@ -242,6 +265,7 @@ module.exports = {
   frequency
   sequence
   sized
+  recursive
   label
   transform
   repeat
