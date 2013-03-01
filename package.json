@@ -49,7 +49,7 @@
   },
   "testling": {
     "files": "lib-test/*.js",
-    "preprocess": "./node_modules/.bin/lsc -o lib-test -c test/*.ls && ./node_modules/.bin/lsc -o lib -c src/*.ls",
+    "preprocess": "npm run-script pretest",
     "browsers": {
       "ie": [
         8,
