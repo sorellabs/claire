@@ -68,7 +68,7 @@ generator-p = (a) -> 'next' of (Object a)
 # :: Number -> a -> Generator a -> a
 # :: Number -> (a -> b) -> Generator b -> b
 compute = (size, a, gen) ->
-  | callable-p a => a (size or gen.size)
+  | callable-p a => a (size ? gen.size)
   | otherwise    => a
 
 
@@ -209,7 +209,7 @@ sized = (f, gen) --> do
 # :: Generator a -> Generator b
 recursive = (gen) -> do
                      Generator.derive {
-                       to-string: -> "<Recursive #{compute 1, gen, this}>"
+                       to-string: -> "<Recursive>"
                        next: (n) -> do
                                     n := floor ((n ? @size) / 2)
                                     g  = compute n, gen, this
