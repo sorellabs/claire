@@ -105,8 +105,10 @@ describe-ignored = (report) ->
 #
 # :: Report -> String
 label-histogram = (report) ->
-  total = report.all.length
-  labels = ["o #{percentage v.length, total}% - #k" for k, v of report.labels]
+  total  = report.all.length
+  labels = [[(percentage v.length, total), k] for k, v of report.labels]
+           |> sort-by (x, y) -> x < y
+           |> map ([p, key]) -> "o #{p}% - #{key}"
 
   if labels.length => "> Collected test data:\n    #{labels.join '\n    '}"
   else             => ''
