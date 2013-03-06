@@ -1,3 +1,4 @@
+require 'es5-shim'
 global <<< require 'claire-mocha'
 global <<< require '../lib/generating'
 global <<< require 'prelude-ls'
