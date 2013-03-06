@@ -25,8 +25,8 @@
 # WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 ### -- Dependencies ----------------------------------------------------
-{ Base }           = require 'boo'
-{ values, reduce } = require 'prelude-ls'
+{ Base }                         = require 'boo'
+{ values, reduce, sort-by, map } = require 'prelude-ls'
 
 ### -- Aliases ---------------------------------------------------------
 frozen  = Object.freeze
