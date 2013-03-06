@@ -11,7 +11,7 @@
     "prelude-ls": "~0.6.0"
   },
   "devDependencies": {
-    "claire-mocha": "~0.1.0",
+    "claire-mocha": "~0.1.2",
     "LiveScript": "~1.1.1",
     "chai": "~1.5.0",
     "mocha": "~1.8.1",
