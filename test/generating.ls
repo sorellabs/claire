@@ -1,11 +1,9 @@
-global.claire-config = times: 1
-
 global <<< require 'claire-mocha'
 global <<< require '../lib/generating'
-global <<< require '../lib/data'
 global <<< require 'prelude-ls'
 { for-all } = require '../lib'
 { expect } = require 'chai'
+_ = require '../lib/data'
 
 e = it
 
@@ -40,7 +38,7 @@ describe '{M} Generating' ->
                         .satisfy  -> ("#it".replace /,/g, '').length is 6
 
   o 'λ sized' -> do
-                 for-all (sized (-> 5), (choice Num, Str, (List Int), (Map Int)))
+                 for-all (sized (-> 5), (choice _.Num, _.Str, (_.Array _.Int), (_.Object _.Int)))
                  .satisfy -> switch typeof! it
                     | \Number => -5 <= it < 5
                     | \String => it.length < 5
