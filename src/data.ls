@@ -106,7 +106,7 @@ Id           = do
                start = frequency [1, '_'], [2, '$'], [9, AlphaChar]
                chars = frequency [1, NumChar], [9, start]
                rest  = transform join, (repeat chars)
-               
+
                label 'id' (transform join, (sequence start, rest))
 
 
@@ -136,7 +136,7 @@ module.exports = {
   NumStr, AlphaNumStr, Id
 
   # Constainers
-  List, Map
+  Array: List, Object: Map
 
   # Umbrella
   Nothing, Falsy, Any
