@@ -1,4 +1,4 @@
-require 'es5-shim'
+require 'es5-shim/es5-sham'
 { keys, fold, values } = require 'prelude-ls'
 { o }                  = require 'claire-mocha'
 { sized }              = require '../lib/generating'
