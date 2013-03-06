@@ -1,9 +1,9 @@
 require 'es5-shim'
-global <<< require 'prelude-ls'
-global <<< require 'claire-mocha'
-{ sized } = require '../lib/generating'
-{ for-all } = require '../lib'
-_ = require '../lib/data'
+{ keys, fold, values } = require 'prelude-ls'
+{ o }                  = require 'claire-mocha'
+{ sized }              = require '../lib/generating'
+{ for-all }            = require '../lib'
+_                      = require '../lib/data'
 
 
 ### -- Helpers ---------------------------------------------------------

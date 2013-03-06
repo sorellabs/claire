@@ -1,7 +1,9 @@
 require 'es5-shim'
-global <<< require 'claire-mocha'
-global <<< require '../lib/generating'
-global <<< require 'prelude-ls'
+{ o } = require 'claire-mocha'
+{ keys } = require 'prelude-ls'
+{ as-generator, Generator, \
+  choice, frequency, sequence, recursive, sized, \
+  label, transform, repeat } = require '../lib/generating'
 { for-all } = require '../lib'
 { expect } = require 'chai'
 _ = require '../lib/data'
