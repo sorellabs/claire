@@ -1,3 +1,4 @@
+require 'es5-shim'
 require 'es5-shim/es5-sham'
 { o } = require 'claire-mocha'
 { keys } = require 'prelude-ls'
