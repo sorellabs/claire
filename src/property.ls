@@ -27,6 +27,7 @@
 
 ### -- Dependencies ----------------------------------------------------
 { Base } = require 'boo'
+{ test } = require './check'
 
 
 ### -- Aliases ---------------------------------------------------------
@@ -129,6 +130,12 @@ Property = Base.derive {
   # arguments once.
   # :: @Property => () -> Result
   run: -> apply-property (@arguments.map (g) -> g.next!), this
+
+  ##### λ as-test
+  # Returns a function that can be given for a test runner to verify
+  # this property.
+  # :: @Property => Config? -> () -> ()
+  as-test: (config) -> ~> test config, this    
 }
 
 
