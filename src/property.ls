@@ -58,7 +58,10 @@ classify = (args, prop) -->
 # Verifies if the property's invariant's hold for the arguments.
 # :: [a] -> Property -> Bool
 verify = (args, prop) -->
-  !!(prop.invariant ...(values args))
+  try
+    !!(prop.invariant ...(values args))
+  catch e
+    e
 
 #### λ invalidate
 # Invalidates the property for the given arguments (they're not valid).
