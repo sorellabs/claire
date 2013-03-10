@@ -1,6 +1,6 @@
 {
   "name": "claire",
-  "version": "0.3.0",
+  "version": "0.3.1",
   "description": "Property-based testing library (à lá QuickCheck/ScalaCheck).",
   "main": "./lib/index.js",
   "directories": {
@@ -8,17 +8,17 @@
   },
   "dependencies": {
     "boo": "~1.2.4",
-    "prelude-ls": "~0.6.0"
+    "prelude-ls": "~0.6.0",
+    "flaw": "~0.1.0"
   },
   "devDependencies": {
-    "claire-mocha": "~0.2.0",
     "LiveScript": "~1.1.1",
-    "chai": "~1.5.0",
     "mocha": "~1.8.1",
-    "es5-shim": "~2.0.5"
+    "es5-shim": "~2.0.5",
+    "browserify": "~2.4.3"
   },
   "scripts": {
-    "test-cc": "./node_modules/.bin/lsc -o lib-test -c test/*.ls && ./node_modules/.bin/lsc -o lib -c src/*.ls",
+    "test-cc": "./node_modules/.bin/lsc -o lib-test -c test/*.ls && ./node_modules/.bin/lsc -o lib -c src/*.ls && ./node_modules/.bin/browserify -o test/browser/suite-bundle.js -e test/browser/suite.js",
     "test": "./node_modules/.bin/mocha lib-test/*.js",
     "pretest": "npm run-script test-cc",
     "prepublish": "./node_modules/.bin/lsc -o lib -c src/*.ls"
@@ -49,7 +49,7 @@
     ]
   },
   "testling": {
-    "files": "lib-test/*.js",
+    "files": "test/browser/suite.js",
     "preprocess": "npm run-script pretest",
     "browsers": {
       "ie": [
