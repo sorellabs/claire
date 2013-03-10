@@ -25,12 +25,37 @@
 # WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 ### -- Dependencies ----------------------------------------------------
+make-error                       = require 'flaw'
 { Base }                         = require 'boo'
 { values, reduce, sort-by, map } = require 'prelude-ls'
+
 
 ### -- Aliases ---------------------------------------------------------
 frozen  = Object.freeze
 {round} = Math
+
+
+### -- Default configuration -------------------------------------------
+default-config = do
+                 times   : 100
+                 verbose : false
+  
+
+### -- Error handling --------------------------------------------------
+
+#### λ EFailure
+# :internal:
+# Constructs a Failure error for a property.
+# 
+# :: Report -> Error
+EFailure = make-error '<property failed>'
+
+#### λ EAbandoned
+# :internal:
+# Constructs an Abandoned error for a property.
+#
+# :: Report -> Error
+EAbandoned = make-error '<property abandoned>'
 
 
 ### -- General helpers -------------------------------------------------
@@ -41,6 +66,14 @@ frozen  = Object.freeze
 #
 # :: Number, Number -> Number
 percentage = (num, total) -> round (num / total) * 100
+
+#### λ with-defaults
+# :internal:
+# Yields a new configuration that provides the default configuration as
+# fallback.
+#
+# :: { String -> a } -> { String -> a }
+with-defaults = (config = {}) -> ({} <<< default-config) <<< config
 
 
 ### -- Helpers for handling Results ------------------------------------
@@ -143,6 +176,23 @@ describe-failures = (report) ->
   | otherwise             => ''
 
 
+#### λ describe-report
+# :internal:
+# Describes the report in the log if it's important to do so.
+#
+# :: Bool -> Report -> IO ()
+describe-report = (verbose, report) -->
+  text        = (("#report".split /\n/).map (s) -> "  #s").join '\n'
+  total       = report.all.length
+  ignored     = report.ignored.length
+  ignored-pct = percentage ignored, total
+  has-labels  = !!(keys report.labels).length
+
+  if verbose or (ignored-pct > 50) or has-labels => console?.log text
+
+
+
+
 ### -- Helper data structures ------------------------------------------
 
 #### {} Report
@@ -223,6 +273,21 @@ check = (max, property) -->
   frozen report
   
 
+#### λ test
+# Tests a property in a way that conforms with the standard API for test
+# runners.
+#
+# :: Config -> Property -> () -> IO ()
+test = (config, property) --> do
+                              c      = with-defaults config
+                              report = check c.times, property
+                              switch report.verdict
+                              | \passed    => describe-report c.verbose, report
+                              | \failed    => throw EFailure report
+                              | \abandoned => throw EAbandoned report
+                              
+
+
 
 ### -- Exports ---------------------------------------------------------
-module.exports = { check }
+module.exports = { check, test, Report }
