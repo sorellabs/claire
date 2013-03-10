@@ -67,22 +67,22 @@ failed-p = (result) -> (status result) in <[ failed errored ]>
 
 ### -- Helpers for presenting a Report ---------------------------------
 
-#### λ describe-veredict
+#### λ describe-verdict
 # :internal:
-# Provides a human-readable veredict of a test report.
+# Provides a human-readable verdict of a test report.
 #
 # :: Report -> String
-describe-veredict = (report) ->
+describe-verdict = (report) ->
   passed      = report.passed.length
   failed      = report.failed.length
   all         = report.all.length
   ignored     = report.ignored.length
 
-  switch report.veredict
+  switch report.verdict
   | \passed    => "+ OK passed #{passed} tests."
   | \failed    => "! Falsified after #{all - ignored} tests, #{failed} failed."
   | \abandoned => "? Aborted after #{all} tests."
-  | otherwise  => "/ Unknown veredict. Likely this test report lacks any data."
+  | otherwise  => "/ Unknown verdict. Likely this test report lacks any data."
 
 
 #### λ describe-ignored
@@ -163,7 +163,7 @@ Report = Base.derive {
     @ignored  = []
     @all      = []
     @labels   = {}
-    @veredict = null
+    @verdict  = null
 
 
   ##### λ add
@@ -185,7 +185,7 @@ Report = Base.derive {
   # :: @this:Report* => () -> String
   to-string: ->
     """
-    #{describe-veredict this} #{describe-ignored this}
+    #{describe-verdict this} #{describe-ignored this}
     #{label-histogram this}
     #{describe-failures this}
     """
@@ -217,9 +217,9 @@ check = (max, property) -->
     | \errored => should-run = false
     | \ignored => if ++ignored > 1000 => should-run = false
 
-  report.veredict = | ignored > 1000 => \abandoned
-                    | max > 0        => \failed
-                    | otherwise      => \passed
+  report.verdict = | ignored > 1000 => \abandoned
+                   | max > 0        => \failed
+                   | otherwise      => \passed
   frozen report
   
 
