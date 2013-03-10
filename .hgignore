@@ -18,3 +18,5 @@ docs/api
 .calliope
 lib
 lib-test
+syntax: glob
+test/browser/suite-bundle.js
