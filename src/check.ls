@@ -126,15 +126,15 @@ describe-failures = (report) ->
     | otherwise => ''
 
   error-for = (a) ->
-    | a instanceof Error => ": Threw #a"
+    | a instanceof Error => ": Threw #{a.stack or a}\n"
     | otherwise          => ''
    
   arg = (a, n) -> "  #n - #{a.value} (#{a.generator})"
   
   errors = report.failed.map (a, n) -> """
-                                       : Failure \##{n + 1}
+                                       : Failure \##{n + 1} --------------------
                                        #{label a.labels}
-                                       #{error-for a}
+                                       #{error-for a.ok}
                                        : The following arguments were provided:
                                        #{a.arguments.map arg .join '\n  '}
                                        """
