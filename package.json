@@ -18,8 +18,9 @@
     "browserify": "~2.4.3"
   },
   "scripts": {
-    "test-cc": "./node_modules/.bin/lsc -o lib-test -c test/*.ls && ./node_modules/.bin/lsc -o lib -c src/*.ls && ./node_modules/.bin/browserify -o test/browser/suite-bundle.js -e test/browser/suite.js",
+    "test-cc": "./node_modules/.bin/lsc -o lib-test -c test/*.ls && ./node_modules/.bin/lsc -o lib -c src/*.ls",
     "test": "./node_modules/.bin/mocha lib-test/*.js",
+    "pretest-browser": "npm run-script test-cc && ./node_modules/.bin/browserify -o test/browser/suite-bundle.js -e test/browser/suite.js",
     "pretest": "npm run-script test-cc",
     "prepublish": "./node_modules/.bin/lsc -o lib -c src/*.ls"
   },
@@ -50,7 +51,7 @@
   },
   "testling": {
     "files": "test/browser/suite.js",
-    "preprocess": "npm run-script pretest",
+    "preprocess": "npm run-script pretest-browser",
     "browsers": {
       "ie": [
         6,
