@@ -51,9 +51,10 @@ percentage = (num, total) -> round (num / total) * 100
 #
 # :: Result -> ResultStatus
 status = (result) ->
-  | result.ok is true  => \passed
-  | result.ok is false => \failed
-  | otherwise          => \ignored
+  | result.ok is true          => \passed
+  | result.ok is false         => \failed
+  | result.ok instanceof Error => \errored
+  | otherwise                  => \ignored
 
 
 #### λ failed-p
@@ -61,7 +62,7 @@ status = (result) ->
 # Checks if a Result failed.
 #
 # :: Result -> Bool
-failed-p = (result) -> result.ok is false
+failed-p = (result) -> (status result) in <[ failed errored ]>
 
 
 ### -- Helpers for presenting a Report ---------------------------------
@@ -123,12 +124,17 @@ describe-failures = (report) ->
   label = (as) -> 
     | as.length => ": The following labels were provided: #{JSON.stringify as}"
     | otherwise => ''
+
+  error-for = (a) ->
+    | a instanceof Error => ": Threw #a"
+    | otherwise          => ''
    
   arg = (a, n) -> "  #n - #{a.value} (#{a.generator})"
   
   errors = report.failed.map (a, n) -> """
                                        : Failure \##{n + 1}
                                        #{label a.labels}
+                                       #{error-for a}
                                        : The following arguments were provided:
                                        #{a.arguments.map arg .join '\n  '}
                                        """
@@ -170,6 +176,7 @@ Report = Base.derive {
     switch status result
     | \passed  => @passed.push result
     | \failed  => @failed.push result
+    | \errored => @failed.push result
     | \ignored => @ignored.push result
 
   ##### λ to-string
@@ -207,6 +214,7 @@ check = (max, property) -->
     switch status result
     | \passed  => --max
     | \failed  => should-run = false
+    | \errored => should-run = false
     | \ignored => if ++ignored > 1000 => should-run = false
 
   report.veredict = | ignored > 1000 => \abandoned
