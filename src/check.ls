@@ -32,6 +32,7 @@ make-error                       = require 'flaw'
 
 ### -- Aliases ---------------------------------------------------------
 frozen  = Object.freeze
+keys    = Object.keys
 {round} = Math
 
 
