@@ -1,44 +1,48 @@
 require 'es5-shim'
-{ o } = require 'claire-mocha'
 { keys } = require 'prelude-ls'
-{ as-generator, Generator, \
-  choice, frequency, sequence, recursive, sized, \
-  label, transform, repeat } = require '../lib/generating'
+{ as-generator, Generator \
+, choice, frequency, sequence, recursive, sized \
+, label, transform, repeat } = require '../lib/generating'
 { for-all } = require '../lib'
-{ expect } = require 'chai'
+assert = require 'assert'
 _ = require '../lib/data'
 
-e = it
+o = it
 
 describe '{M} Generating' ->
   o 'λ as-generator<a>' -> do
                            g = (as-generator 'a')
-                           expect g.to-string! .to.equal '<a>'
-                           for-all g .satisfy (is 'a')
+                           assert.equal g.to-string!, '<a>'
+                           for-all g .satisfy (is 'a') .as-test!
 
-  e 'λ as-generator<Gen a>' -> do
+
+  o 'λ as-generator<Gen a>' -> do
                                g = (as-generator Generator)
-                               expect g .to.equal Generator
+                               assert.equal g, Generator
 
   o 'λ choice<a...>' -> do
                         for-all (choice 'a', 'b')
                         .satisfy  -> it in <[ a b ]>
                         .classify -> it
+                        .as-test!
 
   o 'λ frequency<a...>' -> do
                            for-all (frequency [1, 'a'], [5, 'b'])
                            .satisfy  -> it in <[ a b ]>
                            .classify -> it
+                           .as-test!
 
   o 'λ sequence<a,b>' -> do
                          for-all (sequence 'a', 'b')
                          .satisfy ([a, b]) -> (a is 'a') && (b is 'b')
+                         .as-test!
 
   o 'λ recursive<a>' -> do
                         a = sequence('a', (recursive (n) -> | n == 0 => 'a'
                                                             | _      =>  a))
                         for-all (sized (-> 20), a)
                         .satisfy  -> ("#it".replace /,/g, '').length is 6
+                        .as-test!
 
   o 'λ sized' -> do
                  for-all (sized (-> 5), (choice _.Num, _.Str, (_.Array _.Int), (_.Object _.Int)))
@@ -48,17 +52,21 @@ describe '{M} Generating' ->
                     | \Array  => it.length < 5
                     | \Object => (keys it).length < 5
                  .classify (typeof!)
+                 .as-test!
 
   o 'λ label' -> do
                  g = (label 'a', 'b')
-                 expect g.to-string! .to.equal '<a>'
-                 for-all g .satisfy (is 'b')
+                 assert.equal g.to-string!, '<a>'
+                 for-all g .satisfy (is 'b') .as-test!
+                 
 
   o 'λ transform' -> do
                      for-all (transform (.to-upper-case!), 'a')
                      .satisfy (is 'A')
+                     .as-test!
 
   o 'λ repeat' -> do
                   for-all (repeat 'a')
                   .given   -> it.length > 0
                   .satisfy -> it.every (is 'a')
+                  .as-test!

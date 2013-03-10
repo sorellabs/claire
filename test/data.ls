@@ -1,10 +1,10 @@
 require 'es5-shim'
 { keys, fold, values } = require 'prelude-ls'
-{ o }                  = require 'claire-mocha'
 { sized }              = require '../lib/generating'
 { for-all }            = require '../lib'
 _                      = require '../lib/data'
 
+o = it
 
 ### -- Helpers ---------------------------------------------------------
 size = (o) -> (keys o).length
@@ -18,74 +18,125 @@ depth = (o, n = 0) -> switch typeof! o
 ### -- Specification ---------------------------------------------------
 describe '{M} Generators' ->
   describe '-- Primitive data types' ->
-    o 'Null' -> for-all _.Null .satisfy (is null)
+    o 'Null' -> do
+                for-all _.Null
+                .satisfy (is null)
+                .as-test!
 
-    o 'Undefined' -> for-all _.Undefined .satisfy (is void)
+    o 'Undefined' -> do
+                     for-all _.Undefined
+                     .satisfy (is void)
+                     .as-test!
 
     o 'Bool' -> do
                 for-all _.Bool
                 .satisfy -> (it is true) || (it is false)
                 .classify -> it
+                .as-test!
 
-    o 'Num' -> for-all _.Num .satisfy (is 'Number') . (typeof!)
+    o 'Num' -> do
+               for-all _.Num
+               .satisfy (is 'Number') . (typeof!)
+               .as-test!
 
-    o 'Byte' -> for-all _.Byte .satisfy -> 0 <= it < 255
+    o 'Byte' -> do
+                for-all _.Byte
+                .satisfy -> 0 <= it < 255
+                .as-test!
 
-    o 'Char' -> for-all _.Char .satisfy -> (it.length is 1) && \
-                                         (typeof! it is 'String')
+    o 'Char' -> do
+                for-all _.Char
+                .satisfy -> (it.length is 1) && \
+                            (typeof! it is 'String')
+                .as-test!
 
-    o 'Str' -> for-all _.Str .satisfy (is 'String') . (typeof!)
+    o 'Str' -> do
+               for-all _.Str
+               .satisfy (is 'String') . (typeof!)
+               .as-test!
 
 
   describe '-- Specialised numeric types' ->
     max-int = Math.pow 2, 32
 
-    o 'Int' -> for-all _.Int .satisfy -> -max-int <= it < max-int
+    o 'Int' -> do
+               for-all _.Int
+               .satisfy -> -max-int <= it < max-int
+               .as-test!
 
-    o 'UInt' -> for-all _.UInt .satisfy -> 0 <= it < max-int
+    o 'UInt' -> do
+                for-all _.UInt
+                .satisfy -> 0 <= it < max-int
+                .as-test!
 
-    o 'Positive' -> for-all _.Positive .satisfy (> 0)
+    o 'Positive' -> do
+                    for-all _.Positive
+                    .satisfy (> 0)
+                    .as-test!
 
-    o 'Negative' -> for-all _.Negative .satisfy (< 0)
+    o 'Negative' -> do
+                    for-all _.Negative
+                    .satisfy (< 0)
+                    .as-test!
 
 
   describe '-- Specialised textual types' ->
-    o 'NumChar' -> for-all _.NumChar .satisfy (== /\d/)
+    o 'NumChar' -> do
+                   for-all _.NumChar
+                   .satisfy (== /\d/)
+                   .as-test!
 
-    o 'UpperChar' -> for-all _.UpperChar .satisfy (== /[A-Z]/)
+    o 'UpperChar' -> do
+                     for-all _.UpperChar
+                     .satisfy (== /[A-Z]/)
+                     .as-test!
 
-    o 'LowerChar' -> for-all _.LowerChar .satisfy (== /[a-z]/)
+    o 'LowerChar' -> do
+                     for-all _.LowerChar
+                     .satisfy (== /[a-z]/)
+                     .as-test!
 
-    o 'AlphaChar' -> for-all _.AlphaChar .satisfy (== /[a-zA-Z]/)
+    o 'AlphaChar' -> do
+                     for-all _.AlphaChar
+                     .satisfy (== /[a-zA-Z]/)
+                     .as-test!
 
-    o 'AlphaNumChar' -> for-all _.AlphaNumChar .satisfy (== /[a-zA-Z0-9]/)
+    o 'AlphaNumChar' -> do
+                        for-all _.AlphaNumChar
+                        .satisfy (== /[a-zA-Z0-9]/)
+                        .as-test!
 
     o 'AlphaStr' -> do
                     for-all _.AlphaStr
                     .given -> it.length > 0
                     .satisfy (== /[a-zA-Z]+/)
+                    .as-test!
 
     o 'NumStr' -> do
                   for-all _.NumStr
                   .given -> it.length > 0
                   .satisfy (== /[0-9]+/)
+                  .as-test!
 
     o 'AlphaNumStr' -> do
                        for-all _.AlphaNumStr
                        .given -> it.length > 0
                        .satisfy (== /[a-zA-Z0-9]+/)
+                       .as-test!
 
     o 'Id' -> do
               for-all _.Id
               .satisfy (== /[\$_a-zA-Z][\$_a-zA-Z0-9]*/)
               .classify -> | it.length is 1 => 'trivial'
                            | it.length > 1  => 'ok'
+              .as-test!
 
 
   describe '-- Container data types' ->
     o 'Array(Byte)' -> do
                       for-all (_.Array _.Byte)
                       .satisfy -> it.every (x) -> 0 <= x < 255
+                      .as-test!
 
     o 'Array(Bool, Byte)' -> do
                             for-all (_.Array _.Bool, _.Byte)
@@ -93,16 +144,26 @@ describe '{M} Generators' ->
                                it.every ((x) ->
                                  | typeof x is 'number' => 0 <= x < 255
                                  | otherwise            => !!x is x)
+                            .as-test!
 
-    o 'Object(Bool)' -> for-all (sized (-> 20), (_.Object _.Bool)) .satisfy (o) ->
+    o 'Object(Bool)' -> do
+                        for-all (sized (-> 20), (_.Object _.Bool))
+                        .satisfy (o) ->
                           ((keys o).every  (== /[\$_a-zA-Z][\$_a-zA-Z0-9]*/)) && \
                           ((values o).every -> it == !!it)
+                        .as-test!
 
 
   describe '-- Umbrella type unions' ->
-    o 'Nothing' -> for-all _.Nothing .satisfy (~= null)
+    o 'Nothing' -> do
+                   for-all _.Nothing
+                   .satisfy (~= null)
+                   .as-test!
 
-    o 'Falsy' -> for-all _.Falsy .satisfy -> !it
+    o 'Falsy' -> do
+                 for-all _.Falsy
+                 .satisfy -> !it
+                 .as-test!
 
     o 'Any' -> do
                for-all (sized (-> 20), _.Any)
@@ -116,3 +177,4 @@ describe '{M} Generators' ->
                  | \Array    => "Array: #{depth it}"
                  | \Object   => "Object: #{depth it}"
                  | otherwise => typeof! it
+               .as-test!
