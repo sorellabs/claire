@@ -124,7 +124,7 @@ Any     = choice Nothing, Bool, Num, Str, (recursive -> (List Any)), (recursive 
 
 
 ### -- Exports ---------------------------------------------------------
-module.exports = {
+exports <<< {
   # Primitives
   Null, Undefined, Bool, Num, Byte, Char, Str
 

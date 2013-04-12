@@ -55,4 +55,4 @@ pick-one = (as) -> as[choose-int 0, as.length]
 
 
 ### -- Exports ---------------------------------------------------------
-module.exports = { choose, choose-int, pick-one }
+exports <<< { choose, choose-int, pick-one }

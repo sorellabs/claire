@@ -31,8 +31,8 @@ merge = (...as) -> as.reduce (<<<)
 
 
 ### -- Exports ---------------------------------------------------------
-module.exports = merge do
-                       * { for-all } = require './property'
-                       * require './generating'
-                       * require './check'
-                       * data: require './data'
+exports <<< merge do
+                  * { for-all } = require './property'
+                  * require './generating'
+                  * require './check'
+                  * data: require './data'
