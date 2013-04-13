@@ -135,7 +135,7 @@ module.exports = {
   NumChar, UpperChar, LowerChar, AlphaChar, AlphaNumChar, AlphaStr,
   NumStr, AlphaNumStr, Id
 
-  # Constainers
+  # Containers
   Array: List, Object: Map
 
   # Umbrella
