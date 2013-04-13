@@ -1,10 +1,8 @@
-Claire
-======
+# Claire [![Build Status](https://travis-ci.org/killdream/claire.png)](https://travis-ci.org/killdream/claire)
 
-[![Build Status](https://travis-ci.org/killdream/claire.png)](https://travis-ci.org/killdream/claire)
 
 Claire is a random testing library for both property-based testing
-(QuickCheck-like) and random program generation (ScalaCheck command's
+([QuickCheck][]-like) and random program generation ([ScalaCheck][] command's
 like), which allows you to express your code's behaviours and invariants
 in a clear way.
 
@@ -21,56 +19,31 @@ without, so `Object.freeze = function(a) { return a }` is okay.
 
 ### Example 
 
-These uses the Claire API to collect data about a test. To have something that
-makes sense of the collected data and works out of the box for testing, check
-out [Claire for Mocha][claire-mocha].
-
 ```js
 var claire = require('claire')
 var _      = claire.data
+var forAll = claire.forAll
 
-// Simple universal quantifier
-var concat_p = claire.forAll ( _.List(_.Int), _.List(_.Int) )
-                     .satisfy(function(xs, ys) {
-                                return xs.length + ys.length
-                                    == xs.concat(ys).length })
-
-// Checking returns a Report with meta-data about the tests.
-claire.check(100, concat_p)
-// (Object <| Report) => { property: { invariant: [Function] }
-//                       , passed: [ { ok: true, labels: [], arguments: [Object] }, ... ]
-//                       , failed: []
-//                       , ignored: []
-//                       , all: [ { ok: true, labels: [], arguments: [Object] }, ... ]
-//                       , labels: {}
-//                       , veredict: 'passed' }
+var commutative_p = forAll( _.Int, _.Int ).satisfy( function(a, b) {
+                      return a + b == b + a
+                    }).asTest()
+// + OK passed 100 tests.
 
 
-// Conditional properties
-var sqrt_p = claire.forAll ( _.Int )
-                   .given  (function(n){ return n > 0 })
-                   .satisfy(function(n){ return Math.sqrt(n * n) == n })
+var identity_p = forAll(_.Int).satisfy(function(a) {
+                   return a == a + 1
+                 })
 
-// The report can be made human-readable by just calling `.toString()'
-claire.check(100, sqrt_p).toString()
-// (String) => "+ OK passed 100 tests. 129 (56%) tests ignored."
-
-
-// Data classifiers
-var reverse_p = claire.forAll ( _.List(_.Int), _.List(_.Int) )
-                      .satisfy(function(xs, ys) {
-                                 (reverse(xs.concat(ys)) + '')
-                                 == (reverse(ys).concat(reverse(xs)) + '') })
-                      .classify(function(xs, ys) {
-                                  return xs.length == 0? 'trivial'
-                                       : ys.length == 0? 'trivial'
-                                       : /* otherwise */ 'ok' })
-                                       
-claire.check(100, reverse_p).toString()
-// (String) => "+ OK passed 100 tests. 
-//              > Collected test data:
-//                  o 85% - ok
-//                  o 15% - trivial"
+identity_p.asTest({ verbose: true, times: 100 })()
+// <property failed>: ! Falsified after 1 tests, 1 failed.
+//
+// : Failure #1 --------------------
+//
+//
+// : The following arguments were provided:
+//   0 - 93 (<int>)
+//
+// (Stack trace)
 ```
 
 
@@ -93,7 +66,8 @@ $ calliope build
 ```
 
 A fully narrated documentation explaining the concepts behind the
-library is planned for a future release.
+library is planned for a future release. Current WIP can be found at
+http://claire.readthedocs.org/.
 
 
 ### Tests
@@ -113,3 +87,5 @@ MIT/X11. ie.: do whatever you want.
 [claire-mocha]: http://github.com/killdream/claire-mocha.git
 [Calliope]: http://github.com/killdream/calliope.git
 [es5-shim]: https://github.com/kriskowal/es5-shim
+[QuickCheck]: https://github.com/nick8325/quickcheck
+[ScalaCheck]: https://github.com/rickynils/scalacheck
