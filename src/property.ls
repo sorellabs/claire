@@ -148,4 +148,4 @@ for-all = (...as) -> Property.make as
 
 
 ### -- Exports ---------------------------------------------------------
-exports <<< { Property, for-all }
+module.exports = { Property, for-all }

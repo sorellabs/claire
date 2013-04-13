@@ -291,4 +291,4 @@ test = (config, property) --> do
 
 
 ### -- Exports ---------------------------------------------------------
-exports <<< { check, test, Report }
+module.exports = { check, test, Report }

@@ -254,7 +254,7 @@ repeat = (gen) -> do
 
 
 ### -- Exports ---------------------------------------------------------
-exports <<< {
+module.exports = {
   make-value
   value
 
