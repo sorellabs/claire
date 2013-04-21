@@ -248,9 +248,9 @@ would work on Mocha::
 
 
     describe('Addition', function() {
-      it('Should be commutative', forAll(_.Int, _.Int).satisfy(a, b) {
+      it('Should be commutative', forAll(_.Int, _.Int).satisfy(function(a, b) {
                                     return a + b == b + a
-                                  }.asTest())
+                                  }).asTest())
     })
 
 
