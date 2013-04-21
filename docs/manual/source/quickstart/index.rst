@@ -68,6 +68,10 @@ In plain English, that means:
     For all pairs of integers (as ``a`` and ``b``), the sum of these integers
     yields the same result, regardless of the order in which it's performed.
 
+.. warning::
+   Properties are only considered successful if they return ``true``. Any other
+   value will result on the property being rejected.
+
 
 Now, ``forAll`` is a function that takes some *data generators* and returns a
 ``Property`` object. This object knows how to randomly generate the test data
