@@ -84,11 +84,7 @@ with-defaults = (config = {}) -> ({} <<< default-config) <<< config
 # Retrieves a normalised Status tag for the Result.
 #
 # :: Result -> ResultStatus
-status = (result) ->
-  | result.ok is true          => \passed
-  | result.ok is false         => \failed
-  | result.ok instanceof Error => \errored
-  | otherwise                  => \ignored
+status = (result) -> result.kind or \rejected
 
 
 #### λ failed-p
@@ -96,7 +92,7 @@ status = (result) ->
 # Checks if a Result failed.
 #
 # :: Result -> Bool
-failed-p = (result) -> (status result) in <[ failed errored ]>
+failed-p = (result) -> (status result) in <[ failed rejected ]>
 
 
 ### -- Helpers for presenting a Report ---------------------------------
@@ -156,22 +152,27 @@ label-histogram = (report) ->
 # :: Report -> String
 describe-failures = (report) ->
   label = (as) -> 
-    | as.length => ": The following labels were provided: #{JSON.stringify as}"
+    | as.length => "» The following labels were provided: #{JSON.stringify as}"
     | otherwise => ''
 
-  error-for = (a) ->
-    | a instanceof Error => ": Threw #{a.stack or a}\n"
-    | otherwise          => ''
+  error-for = (kind, e) ->
+    | kind is \failed  => "» Threw #{e?.stack or e}\n"
+    | otherwise        => ''
    
-  arg = (a, n) -> "  #n - #{a.value} (#{a.generator})"
-  
+  arg = (a, n) -> "  #n - #{JSON.stringify a.value} (#{a.generator})"
+
+  rejection-for = (kind, e) ->
+    if kind != \rejected => ''
+    else                 => "» Reason: #{JSON.stringify e.value}\n"
+
   errors = report.failed.map (a, n) -> """
-                                       : Failure \##{n + 1} --------------------
-                                       #{label a.labels}
-                                       #{error-for a.ok}
-                                       : The following arguments were provided:
-                                       #{a.arguments.map arg .join '\n  '}
-                                       """
+  : Failure \##{n + 1} -----------------------------------------------------------
+    #{rejection-for a.kind, a}
+    #{label a.labels}
+    #{error-for a.kind, a.value}
+    » The following arguments were provided:
+    #{a.arguments.map arg .join '\n  '}
+  """
   switch
   | errors.join '' .trim! => errors.join '\n---\n'
   | otherwise             => ''
@@ -225,10 +226,10 @@ Report = Base.derive {
     @all.push result
     result.labels.map (a) ~> @labels.[]"#a".push result
     switch status result
-    | \passed  => @passed.push result
-    | \failed  => @failed.push result
-    | \errored => @failed.push result
-    | \ignored => @ignored.push result
+    | \held     => @passed.push result
+    | \failed   => @failed.push result
+    | \rejected => @failed.push result
+    | \ignored  => @ignored.push result
 
   ##### λ to-string
   # Provides a human-readable presentation of this Report.
@@ -263,10 +264,10 @@ check = (max, property) -->
     report.add result
 
     switch status result
-    | \passed  => --max
-    | \failed  => should-run = false
-    | \errored => should-run = false
-    | \ignored => if ++ignored > 1000 => should-run = false
+    | \held     => --max
+    | \rejected => should-run = false
+    | \failed   => should-run = false
+    | \ignored  => if ++ignored > 1000 => should-run = false
 
   report.verdict = | ignored > 1000 => \abandoned
                    | max > 0        => \failed

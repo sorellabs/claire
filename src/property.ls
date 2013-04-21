@@ -33,6 +33,49 @@
 ### -- Aliases ---------------------------------------------------------
 frozen = Object.freeze
 
+
+### -- Property result types -------------------------------------------
+
+#### λ make-result
+# Constructs a Result object.
+#
+# :: String -> [a] -> [String] -> Maybe Bool -> Result
+make-result = (kind, value, args, labels) -->
+  kind      : kind
+  value     : value
+  labels    : labels
+  arguments : args
+
+
+#### λ invalidate
+# Invalidates the property for the given arguments (they're not valid).
+#
+# :: [a] -> Result
+invalidate = (args) -->
+  make-result \ignored, null, args, []
+
+
+#### λ hold
+# Constructs a Result for a successful property.
+# 
+# :: [a] -> [String] -> Result
+hold = make-result \held, true
+
+
+#### λ reject
+# Rejects the property with the given reason.
+#
+# :: [a] -> [String] -> Result
+reject = make-result \rejected
+
+
+#### λ fail
+# Constructs a Result for a failed property (one that errored out).
+#
+# :: [a] -> [String] -> Result
+fail = make-result \failed
+
+
 ### -- Helpers ---------------------------------------------------------
 
 #### λ values
@@ -57,34 +100,23 @@ classify = (args, prop) -->
 
 #### λ verify
 # Verifies if the property's invariant's hold for the arguments.
-# :: [a] -> Property -> Bool
-verify = (args, prop) -->
+# :: [a] -> [String] -> Property -> Bool
+verify = (args, labels, prop) -->
   try
-    !!(prop.invariant ...(values args))
+    result = prop.invariant ...(values args)
+    if result is true => hold args, labels
+    else              => reject result, args, labels
   catch e
-    e
-
-#### λ invalidate
-# Invalidates the property for the given arguments (they're not valid).
-# :: [a] -> Property -> Result
-invalidate = (args, prop) -->
-  make-result args, [], null
+    fail e, args, labels
 
 
 #### λ apply-property
 # Applies a property to some arguments.
 # :: [a] -> Property -> Result
 apply-property = (args, prop) -->
-  | valid-p args, prop => make-result args, (classify args, prop), (verify args, prop)
-  | otherwise          => invalidate args, prop
+  | valid-p args, prop => verify args, (classify args, prop), prop
+  | otherwise          => invalidate args
 
-#### λ make-result
-# Constructs a Result object.
-# :: [a] -> [String] -> Maybe Bool -> Result
-make-result = (args, labels, ok) -->
-  ok        : ok
-  labels    : labels
-  arguments : args
 
 ### -- Core implementation ---------------------------------------------
 
