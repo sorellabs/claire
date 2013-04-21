@@ -83,50 +83,50 @@ describe '{M} Generators' ->
   describe '-- Specialised textual types' ->
     o 'NumChar' do
                 for-all _.NumChar
-                .satisfy (== /\d/)
+                .satisfy Boolean . (== /\d/)
                 .as-test!
 
     o 'UpperChar' do
                   for-all _.UpperChar
-                  .satisfy (== /[A-Z]/)
+                  .satisfy Boolean . (== /[A-Z]/)
                   .as-test!
 
     o 'LowerChar' do
                   for-all _.LowerChar
-                  .satisfy (== /[a-z]/)
+                  .satisfy Boolean . (== /[a-z]/)
                   .as-test!
 
     o 'AlphaChar' do
                   for-all _.AlphaChar
-                  .satisfy (== /[a-zA-Z]/)
+                  .satisfy Boolean . (== /[a-zA-Z]/)
                   .as-test!
 
     o 'AlphaNumChar' do
                      for-all _.AlphaNumChar
-                     .satisfy (== /[a-zA-Z0-9]/)
+                     .satisfy Boolean . (== /[a-zA-Z0-9]/)
                      .as-test!
 
     o 'AlphaStr' do
                  for-all _.AlphaStr
                  .given -> it.length > 0
-                 .satisfy (== /[a-zA-Z]+/)
+                 .satisfy Boolean . (== /[a-zA-Z]+/)
                  .as-test!
 
     o 'NumStr' do
                for-all _.NumStr
                .given -> it.length > 0
-               .satisfy (== /[0-9]+/)
+               .satisfy Boolean . (== /[0-9]+/)
                .as-test!
 
     o 'AlphaNumStr' do
                     for-all _.AlphaNumStr
                     .given -> it.length > 0
-                    .satisfy (== /[a-zA-Z0-9]+/)
+                    .satisfy Boolean . (== /[a-zA-Z0-9]+/)
                     .as-test!
 
     o 'Id' do
            for-all _.Id
-           .satisfy (== /[\$_a-zA-Z][\$_a-zA-Z0-9]*/)
+           .satisfy Boolean . (== /[\$_a-zA-Z][\$_a-zA-Z0-9]*/)
            .classify -> | it.length is 1 => 'trivial'
                         | it.length > 1  => 'ok'
            .as-test!
