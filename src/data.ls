@@ -80,7 +80,7 @@ Null      = as-generator null
 Undefined = as-generator void
 Bool      = choice true, false
 Num       = label 'num'  (as-generator (s) -> choose -s, s)
-Byte      = label 'byte' (as-generator (_) -> choose 0, 255)
+Byte      = label 'byte' (as-generator (_) -> to-integer (choose 0, 255))
 Char      = label 'char' (transform char, Byte)
 Str       = label 'str'  (transform join, (repeat Char))
 
