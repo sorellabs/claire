@@ -41,8 +41,8 @@ describe '{M} Generators' ->
 
     o 'Byte' do
              for-all _.Byte
-             .satisfy -> 0 <= it < 255
-             .as-test!
+             .satisfy -> (0 <= it < 255) and ((it .|. 0) is it)
+             .as-test! 
 
     o 'Char' do
              for-all _.Char
