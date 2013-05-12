@@ -1,6 +1,6 @@
 require 'es5-shim'
 { keys } = require 'prelude-ls'
-{ as-generator, Generator \
+{ as-generator, bind, Generator \
 , choice, frequency, sequence, recursive, sized \
 , label, transform, repeat } = require '../lib/generating'
 { for-all } = require '../lib'
@@ -19,6 +19,13 @@ describe '{M} Generating' ->
   o 'λ as-generator<Gen a>' -> do
                                g = (as-generator Generator)
                                assert.equal g, Generator
+  
+  o 'λ bind<a, b>' -> do
+                      g = (as-generator 'a')
+                      f = (v) -> (as-generator 'b')
+                      for-all (bind g, f)
+                      .satisfy -> it == 'b'
+                      .as-test!
 
   o 'λ choice<a...>' do
                      for-all (choice 'a', 'b')

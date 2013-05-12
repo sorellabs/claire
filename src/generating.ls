@@ -145,6 +145,18 @@ as-generator = (a) ->
                       }
 
 
+##### λ bind
+# Monadic bind for generators
+#
+# :: Generator a -> (a -> Generator b) -> Generator b
+bind = (gen, f) -> do
+                   Generator.derive {
+                     next: (n) -> do
+                                  v = value n, this, (as-generator gen)
+                                  value n, this, (as-generator (f v))
+                   }
+
+
 #### λ choice
 # Alternatively generate values from one of the given generators at
 # random.
@@ -261,6 +273,7 @@ module.exports = {
   Generator
   
   as-generator
+  bind
   choice
   frequency
   sequence
