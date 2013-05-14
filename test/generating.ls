@@ -3,7 +3,7 @@ require 'es5-shim'
 { as-generator, bind, Generator \
 , choice, frequency, sequence, recursive, sized \
 , label, transform, repeat } = require '../lib/generating'
-{ for-all } = require '../lib'
+{ for-all, data } = require '../lib'
 assert = require 'assert'
 _ = require '../lib/data'
 
@@ -20,12 +20,12 @@ describe '{M} Generating' ->
                                g = (as-generator Generator)
                                assert.equal g, Generator
   
-  o 'λ bind<a, b>' -> do
-                      g = (as-generator 'a')
-                      f = (v) -> (as-generator 'b')
-                      for-all (bind g, f)
-                      .satisfy -> it == 'b'
-                      .as-test!
+  o 'λ bind<a, b>' do
+                   g = data.Int
+                   f = (v) -> (as-generator [v, v-1])
+                   for-all (bind g, f)
+                   .satisfy -> it[1] is (it[0] - 1)
+                   .as-test!
 
   o 'λ choice<a...>' do
                      for-all (choice 'a', 'b')
