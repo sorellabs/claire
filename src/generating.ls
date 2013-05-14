@@ -153,7 +153,8 @@ bind = (gen, f) -> do
                    Generator.derive {
                      next: (n) -> do
                                   v = value n, this, (as-generator gen)
-                                  value n, this, (as-generator (f v))
+                                  r = value n, this, (as-generator (f v))
+                                  make-value r, this
                    }
 
 
