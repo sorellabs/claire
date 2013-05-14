@@ -116,6 +116,12 @@ Generator = Base.derive {
   # :: a -> [a]
   shrink: (a) -> ...
 
+  ##### λ then
+  # Monadic bind: shoves a value from a monad into a monad-returning function.
+  #
+  # :: (a -> Generator b) -> Generator b
+  then: (f) -> bind this, f
+
   ##### λ to-string
   # Returns a friendly representation of this generator.
   #

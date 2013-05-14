@@ -27,6 +27,13 @@ describe '{M} Generating' ->
                    .satisfy -> it[1] is (it[0] - 1)
                    .as-test!
 
+  o 'Generator#then<f>' do
+                        g = data.Int
+                        f = (v) -> (as-generator [v, v-1])
+                        for-all (g.then f)
+                        .satisfy -> it[1] is (it[0] - 1)
+                        .as-test!
+
   o 'λ choice<a...>' do
                      for-all (choice 'a', 'b')
                      .satisfy  -> it in <[ a b ]>
