@@ -1,5 +1,7 @@
 (function(){
   var brofist, tap, specs;
+  require('es5-shim');
+  require('es5-shim/es5-sham');
   brofist = require('brofist');
   tap = require('brofist-tap');
   specs = require('./specs');

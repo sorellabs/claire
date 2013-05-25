@@ -1,3 +1,3 @@
 (function(){
-  module.exports = [require('./data'), require('./generating')];
+  module.exports = [require('./data'), require('./generating'), require('./property')];
 }).call(this);

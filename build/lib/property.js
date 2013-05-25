@@ -27,7 +27,7 @@
     case prop.implications.length !== 0:
       return true;
     default:
-      return prop.implications.some(function(f){
+      return prop.implications.every(function(f){
         return f.apply(null, values(args));
       });
     }
@@ -92,9 +92,12 @@
       }), this);
     },
     asTest: function(config){
-      var this$ = this;
+      var prop;
+      prop = this;
       return function(){
-        return test(config, this$);
+        return test(config, prop.derive({
+          invariant: prop.invariant.bind(this)
+        }));
       };
     }
   });
