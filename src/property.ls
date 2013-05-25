@@ -88,7 +88,7 @@ values = (.map (.value))
 # :: [a] -> Property -> Bool
 valid-p = (args, prop) -->
   | prop.implications.length is 0 => true
-  | otherwise                     => prop.implications.some (f) -> f ...(values args)
+  | otherwise                     => prop.implications.every (f) -> f ...(values args)
 
 
 #### λ classify
@@ -167,7 +167,9 @@ Property = Base.derive {
   # Returns a function that can be given for a test runner to verify
   # this property.
   # :: @Property => Config? -> () -> ()
-  as-test: (config) -> ~> test config, this    
+  as-test: (config) ->
+    prop = this
+    -> test config, prop.derive { invariant: prop.invariant.bind this }    
 }
 
 
