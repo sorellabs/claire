@@ -2,7 +2,7 @@ bin := $(shell npm bin)
 browserify := $(bin)/browserify lib/index.js
 lsc := $(bin)/lsc
 
-lib: scr/*.ls
+lib: src/*.ls
 	$(lsc) -o lib -c src/*.ls
 
 build/test: test/*.ls
