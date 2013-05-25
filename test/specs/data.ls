@@ -1,10 +1,10 @@
-require 'es5-shim'
-{ keys, fold, values } = require 'prelude-ls'
-{ sized }              = require '../lib/generating'
-{ for-all }            = require '../lib'
-_                      = require '../lib/data'
+describe = (require 'brofist')!
 
-o = it
+{ keys, fold, values } = require 'prelude-ls'
+
+{ sized }              = require '../../lib/generating'
+{ for-all }            = require '../../lib'
+_                      = require '../../lib/data'
 
 ### -- Helpers ---------------------------------------------------------
 size = (o) -> (keys o).length
@@ -16,8 +16,8 @@ depth = (o, n = 0) -> switch typeof! o
   | otherwise  => n
 
 ### -- Specification ---------------------------------------------------
-describe '{M} Generators' ->
-  describe '-- Primitive data types' ->
+module.exports = describe '{M} Generators' (o, describe) ->
+  describe '-- Primitive data types' (o) ->
     o 'Null' do
              for-all _.Null
              .satisfy (is null)
@@ -56,7 +56,7 @@ describe '{M} Generators' ->
             .as-test!
 
 
-  describe '-- Specialised numeric types' ->
+  describe '-- Specialised numeric types' (o) ->
     max-int = Math.pow 2, 32
 
     o 'Int' do
@@ -80,7 +80,7 @@ describe '{M} Generators' ->
                  .as-test!
 
 
-  describe '-- Specialised textual types' ->
+  describe '-- Specialised textual types' (o) ->
     o 'NumChar' do
                 for-all _.NumChar
                 .satisfy Boolean . (== /\d/)
@@ -132,7 +132,7 @@ describe '{M} Generators' ->
            .as-test!
 
 
-  describe '-- Container data types' ->
+  describe '-- Container data types' (o) ->
     o 'Array(Byte)'  do
                     for-all (_.Array _.Byte)
                     .satisfy -> it.every (x) -> 0 <= x < 255
@@ -154,7 +154,7 @@ describe '{M} Generators' ->
                      .as-test!
 
 
-  describe '-- Umbrella type unions' ->
+  describe '-- Umbrella type unions' (o) ->
     o 'Nothing' do
                 for-all _.Nothing
                 .satisfy (~= null)

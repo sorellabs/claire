@@ -1,15 +1,15 @@
-require 'es5-shim'
+describe = (require 'brofist')!
+assert = require 'assert'
+
 { keys } = require 'prelude-ls'
+
 { as-generator, bind, Generator \
 , choice, frequency, sequence, recursive, sized \
-, label, transform, repeat } = require '../lib/generating'
-{ for-all, data } = require '../lib'
-assert = require 'assert'
-_ = require '../lib/data'
+, label, transform, repeat } = require '../../lib/generating'
+{ for-all, data } = require '../../lib'
+_ = require '../../lib/data'
 
-o = it
-
-describe '{M} Generating' ->
+module.exports = describe '{M} Generating' (o) ->
   o 'λ as-generator<a>' -> do
                            g = (as-generator 'a')
                            assert.equal g.to-string!, '<a>'

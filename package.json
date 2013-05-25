@@ -13,16 +13,15 @@
   },
   "devDependencies": {
     "LiveScript": "~1.1.1",
-    "mocha": "~1.8.1",
     "es5-shim": "~2.0.5",
-    "browserify": "~2.4.3"
+    "browserify": "~2.4.3",
+    "brofist-tap": "~0.1.0",
+    "brofist": "~0.2.3",
+    "brofist-minimal": "~0.1.1"
   },
   "scripts": {
-    "test-cc": "./node_modules/.bin/lsc -o lib-test -c test/*.ls && ./node_modules/.bin/lsc -o lib -c src/*.ls",
-    "test": "./node_modules/.bin/mocha lib-test/*.js",
-    "pretest-browser": "npm run-script test-cc && ./node_modules/.bin/browserify -o test/browser/suite-bundle.js -e test/browser/suite.js",
-    "pretest": "npm run-script test-cc",
-    "prepublish": "./node_modules/.bin/lsc -o lib -c src/*.ls"
+    "test": "make test",
+    "prepublish": "make prepublish"
   },
   "repository": {
     "type": "git",
@@ -50,34 +49,16 @@
     ]
   },
   "testling": {
-    "files": "test/browser/suite.js",
-    "preprocess": "npm run-script pretest-browser",
-    "browsers": {
-      "ie": [
-        6,
-        7,
-        8,
-        9,
-        10
-      ],
-      "firefox": [
-        15,
-        "nightly"
-      ],
-      "chrome": [
-        21,
-        22,
-        "canary"
-      ],
-      "opera": [
-        10,
-        12,
-        "next"
-      ],
-      "safari": [
-        5.1
-      ]
-    },
-    "harness": "mocha"
+    "files": "build/test/tap.js",
+    "browsers": [
+      "ie/6..latest",
+      "chrome/20..latest",
+      "firefox/15..latest",
+      "safari/latest",
+      "opera/11.0..latest",
+      "iphone/6",
+      "ipad/6",
+      "android-browser/4.2"
+    ]
   }
 }
