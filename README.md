@@ -1,4 +1,4 @@
-# Claire [![Build Status](https://travis-ci.org/killdream/claire.png)](https://travis-ci.org/killdream/claire)
+# Claire [![Build Status](https://travis-ci.org/killdream/claire.png)](https://travis-ci.org/killdream/claire) ![Dependencies Status](https://david-dm.org/killdream/claire.png)
 
 
 Claire is a random testing library for both property-based testing
