@@ -1,6 +1,6 @@
 {
   "name": "claire",
-  "version": "0.4.0",
+  "version": "0.4.1",
   "description": "Property-based testing library (à lá QuickCheck/ScalaCheck).",
   "main": "./lib/index.js",
   "directories": {
