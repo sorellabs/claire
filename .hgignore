@@ -1,22 +1,12 @@
 syntax:glob
-
 # Usual Emacs backup stuff
 *~
 \#*\#
 .\#*
+npm-debug.log
+.calliope
 
 # Built things that shouldn't be part of the source tree
-dist
-.git
-ignore
-doctrees
-.buildinfo
-build
-npm-debug.log
-node_modules
-docs/api
-.calliope
-lib
-lib-test
-syntax: glob
-test/browser/suite-bundle.js
+syntax: regexp
+^node_modules/
+^lib/
