@@ -6,16 +6,8 @@ Claire is a random testing library for both property-based testing
 like), which allows you to express your code's behaviours and invariants
 in a clear way.
 
-### Platform support
-
-Claire should work neatly in all ES5 platforms. ES3 platforms (IE8-,
-etc) can use [es5-shim][] to provide the fallbacks necessary.
-
-Things are frozen to ensure immutability, but legacy engines can do
-without, so `Object.freeze = function(a) { return a }` is okay.
-
-[![browser support](http://ci.testling.com/killdream/claire.png)](http://ci.testling.com/killdream/claire)
-
+[QuickCheck]: https://github.com/nick8325/quickcheck
+[ScalaCheck]: https://github.com/rickynils/scalacheck
 
 ### Example 
 
@@ -49,43 +41,65 @@ identity_p.asTest({ verbose: true, times: 100 })()
 
 ### Installing
 
-Just grab it from NPM:
+The easiest way is to grab it from NPM (use [Browserify][] if you're on a
+browser):
 
-```js
-npm install claire
-```
+    $ npm install claire
+    
+If you **really** want to continue suffering with old and terrible module
+systems (or use no module system at all), you can run `make bundle` yourself:
+
+    $ git clone git://github.com/killdream/claire
+    $ cd claire
+    $ npm install
+    $ make bundle
+    # Then use `dist/claire.umd.js` wherever you want.
+    
+[browserify]: https://github.com/substack/node-browserify
 
 
 ### Documentation
 
 A reference of the API can be built using [Calliope][]:
 
-```js
-$ npm install -g calliope
-$ calliope build
-```
+    $ npm install -g calliope
+    $ calliope build
+
 
 A fully narrated documentation explaining the concepts behind the
 library is planned for a future release. Current WIP can be found at
 http://claire.readthedocs.org/.
 
+[Calliope]: http://github.com/killdream/calliope.git
+
+
+### Platform support
+
+Claire should work neatly in all ES5 platforms. ES3 platforms (IE8-,
+etc) can use [es5-shim][] to provide the fallbacks necessary.
+
+[es5-shim]: https://github.com/kriskowal/es5-shim
+
+Things are frozen to ensure immutability, but legacy engines can do
+without, so `Object.freeze = function(a) { return a }` is okay.
+
+[![browser support](https://ci.testling.com/killdream/claire.png)](http://ci.testling.com/killdream/claire)
+
 
 ### Tests
 
-You can run all tests using Mocha:
+For node:
 
-```js
-$ npm test
-```
+    $ npm test
+
+For the browser:
+
+    $ npm install -g brofist-browser
+    $ make test
+    $ brofist-browser serve test/specs
+    # Then point your browsers to the URL on yer console
 
 
 ### Licence
 
 MIT/X11. ie.: do whatever you want.
-
-
-[claire-mocha]: http://github.com/killdream/claire-mocha.git
-[Calliope]: http://github.com/killdream/calliope.git
-[es5-shim]: https://github.com/kriskowal/es5-shim
-[QuickCheck]: https://github.com/nick8325/quickcheck
-[ScalaCheck]: https://github.com/rickynils/scalacheck
