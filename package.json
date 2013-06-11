@@ -14,10 +14,10 @@
   "devDependencies": {
     "LiveScript": "~1.1.1",
     "es5-shim": "~2.0.5",
-    "browserify": "~2.4.3",
     "brofist-tap": "~0.1.0",
     "brofist": "~0.2.3",
-    "brofist-minimal": "~0.1.1"
+    "brofist-minimal": "~0.1.1",
+    "browserify": "~2.18.1"
   },
   "scripts": {
     "test": "make test",

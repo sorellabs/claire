@@ -1,4 +1,6 @@
-;(function(e,t,n,r){function i(r){if(!n[r]){if(!t[r]){if(e)return e(r);throw new Error("Cannot find module '"+r+"'")}var s=n[r]={exports:{}};t[r][0](function(e){var n=t[r][1][e];return i(n?n:e)},s,s.exports)}return n[r].exports}for(var s=0;s<r.length;s++)i(r[s]);return i})(typeof require!=="undefined"&&require,{1:[function(require,module,exports){(function(){
+(function(e){if("function"==typeof bootstrap)bootstrap("claire",e);else if("object"==typeof exports)module.exports=e();else if("function"==typeof define&&define.amd)define(e);else if("undefined"!=typeof ses){if(!ses.ok())return;ses.makeClaire=e}else"undefined"!=typeof window?window.claire=e():global.claire=e()})(function(){var define,ses,bootstrap,module,exports;
+return (function(e,t,n){function i(n,s){if(!t[n]){if(!e[n]){var o=typeof require=="function"&&require;if(!s&&o)return o(n,!0);if(r)return r(n,!0);throw new Error("Cannot find module '"+n+"'")}var u=t[n]={exports:{}};e[n][0].call(u.exports,function(t){var r=e[n][1][t];return i(r?r:t)},u,u.exports)}return t[n].exports}var r=typeof require=="function"&&require;for(var s=0;s<n.length;s++)i(n[s]);return i})({1:[function(require,module,exports){
+(function(){
   var merge, ref$, forAll, slice$ = [].slice;
   merge = function(){
     var as;
@@ -30,7 +32,8 @@
   }
 }).call(this);
 
-},{"./property":2,"./generating":3,"./check":4,"./data":5}],5:[function(require,module,exports){(function(){
+},{"./property":2,"./generating":3,"./check":4,"./data":5}],5:[function(require,module,exports){
+(function(){
   var ref$, chooseInt, choose, asGenerator, choice, frequency, sequence, recursive, size, label, transform, repeat, join, char, toInteger, toUnsignedInteger, toObject, Null, Undefined, Bool, Num, Byte, Char, Str, Int, UInt, Positive, Negative, NumChar, UpperChar, LowerChar, AlphaChar, AlphaNumChar, AlphaStr, NumStr, AlphaNumStr, Id, start, chars, rest, List, Map, Nothing, Falsy, Any, slice$ = [].slice;
   ref$ = require('./random'), chooseInt = ref$.chooseInt, choose = ref$.choose;
   ref$ = require('./generating'), asGenerator = ref$.asGenerator, choice = ref$.choice, frequency = ref$.frequency, sequence = ref$.sequence, recursive = ref$.recursive, size = ref$.size, label = ref$.label, transform = ref$.transform, repeat = ref$.repeat;
@@ -131,7 +134,8 @@
   };
 }).call(this);
 
-},{"./random":6,"./generating":3}],6:[function(require,module,exports){(function(){
+},{"./random":6,"./generating":3}],6:[function(require,module,exports){
+(function(){
   var floor, random, choose, chooseInt, pickOne;
   floor = Math.floor, random = Math.random;
   choose = function(a, b){
@@ -150,7 +154,8 @@
   };
 }).call(this);
 
-},{}],2:[function(require,module,exports){(function(){
+},{}],2:[function(require,module,exports){
+(function(){
   var Base, test, frozen, makeResult, invalidate, hold, reject, fail, values, validP, classify, verify, applyProperty, Property, forAll, slice$ = [].slice;
   Base = require('boo').Base;
   test = require('./check').test;
@@ -277,7 +282,8 @@
   }
 }).call(this);
 
-},{"./check":4,"boo":7}],3:[function(require,module,exports){(function(){
+},{"./check":4,"boo":7}],3:[function(require,module,exports){
+(function(){
   var ref$, Base, derive, concatMap, replicate, pickOne, chooseInt, floor, callableP, generatorP, compute, makeValue, value, Generator, asGenerator, bind, choice, frequency, sequence, sized, recursive, label, transform, repeat, slice$ = [].slice;
   ref$ = require('boo'), Base = ref$.Base, derive = ref$.derive;
   ref$ = require('prelude-ls'), concatMap = ref$.concatMap, replicate = ref$.replicate;
@@ -486,7 +492,8 @@
   }
 }).call(this);
 
-},{"./random":6,"boo":7,"prelude-ls":8}],4:[function(require,module,exports){(function(){
+},{"./random":6,"boo":7,"prelude-ls":8}],4:[function(require,module,exports){
+(function(){
   var makeError, Base, ref$, values, reduce, sortBy, map, frozen, keys, round, defaultConfig, EFailure, EAbandoned, percentage, withDefaults, status, failedP, describeVerdict, describeIgnored, labelHistogram, describeFailures, describeReport, Report, check, test;
   makeError = require('flaw');
   Base = require('boo').Base;
@@ -723,219 +730,204 @@
   }
 }).call(this);
 
-},{"flaw":9,"boo":7,"prelude-ls":8}],7:[function(require,module,exports){/// boo.js --- Base primitives for prototypical OO
+},{"flaw":9,"boo":7,"prelude-ls":8}],7:[function(require,module,exports){
+// # Module boo
 //
-// Copyright (c) 2011 Quildreen "Sorella" Motta <quildreen@gmail.com>
+// Base primitives for prototypical OO.
 //
-// Permission is hereby granted, free of charge, to any person
-// obtaining a copy of this software and associated documentation files
-// (the "Software"), to deal in the Software without restriction,
-// including without limitation the rights to use, copy, modify, merge,
-// publish, distribute, sublicense, and/or sell copies of the Software,
-// and to permit persons to whom the Software is furnished to do so,
-// subject to the following conditions:
 //
-// The above copyright notice and this permission notice shall be
-// included in all copies or substantial portions of the Software.
+// :licence: MIT
+//   Copyright (c) 2011 Quildreen "Sorella" Motta <quildreen@gmail.com>
 //
-// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
-// EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
-// MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
-// NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE
-// LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION
-// OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
-// WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
-
-/// Module boo
-void function(root, exports) {
-
-  //// -- Aliases -------------------------------------------------------------
-  var slice        = [].slice
-  var keys         = Object.keys
-  var inherit      = Object.create
-  var define       = Object.defineProperty
-  var descriptor   = Object.getOwnPropertyDescriptor
-  var has_getter_p = function () {
-                       try {
-                         return true === Object.create( {}
-                                                      , { x: { get:
-                                                               function(){
-                                                                 return true }}}).x }
-                       catch(e){ return false }}()
+//   Permission is hereby granted, free of charge, to any person
+//   obtaining a copy of this software and associated documentation files
+//   (the "Software"), to deal in the Software without restriction,
+//   including without limitation the rights to use, copy, modify, merge,
+//   publish, distribute, sublicense, and/or sell copies of the Software,
+//   and to permit persons to whom the Software is furnished to do so,
+//   subject to the following conditions:
+//
+//   The above copyright notice and this permission notice shall be
+//   included in all copies or substantial portions of the Software.
+//
+//   THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+//   EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+//   MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+//   NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE
+//   LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION
+//   OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
+//   WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 
-  
-  //// -- Interfaces ----------------------------------------------------------
+// -- Aliases ----------------------------------------------------------
+var slice      = Function.call.bind([].slice)
+var keys       = Object.keys
+var inherit    = Object.create
+var define     = Object.defineProperty
+var descriptor = Object.getOwnPropertyDescriptor
+var hasGetter  = function () {
+                   var getter = { get: function(){ return true } }
+                   try {
+                     return true === Object.create( {}
+                                                  , { x: getter }).x }
+                   catch(e){ return false }}()
 
-  ///// Interface DataObject
-  // DataObject :: { "to_data" -> () -> Object }
 
-  ///// Interface Mixin
-  // Mixin :: Object | DataObject
+
+// -- Interfaces -------------------------------------------------------
 
-  
-  //// -- Helpers -------------------------------------------------------------
+// ### Type data-object
+// :: { toData: () -> object }
 
-  ///// Function copy_property
-  // :internal:
-  // Copies a property from ``source`' to ``target`'.
+// ### Type mixin
+// :: object | data-object
+
+
+
+// -- Helpers ----------------------------------------------------------
+
+// ### Function copyProperty
+// :internal:
+// Copies a property from `source` to `target`.
+//
+// :: A, B, string -> B
+function copyProperty(source, target, property) {
+  !hasGetter?        target[property] = source[property]
+  : /* otherwise */  define(target, property, descriptor(source, property))
+
+  return target }
+
+// ### Function isDataObject
+// :internal:
+// Checks if the given subject matches the `DataObject` interface
+//
+// :: A -> bool
+function isDataObject(subject) {
+  return subject != null
+  &&     typeof subject.toData == 'function' }
+
+
+// ### Function resolveMixins
+// :internal:
+// Returns the proper object for the given mixin.
+//
+// :: mixin -> object
+function resolveMixin(subject) {
+  return isDataObject(subject)?  subject.toData()
+  :      /* otherwise */         subject }
+
+
+// ### Function fastExtend
+// :internal:
+// Extends the target object with the provided mixins, using a
+// right-most precedence rule — when a there's a property conflict, the
+// property defined in the last object wins.
+//
+// `DataObject`s are properly handled by the `resolveMixin`
+// function.
+//
+// **warning:** low-level
+//
+// > This function is not meant to be called directly from end-user
+// > code, use the `extend` function instead.
+//
+// :: object, [mixin] -> object
+function fastExtend(object, mixins) {
+  var i, j, len, mixin, props, key
+  for (i = 0, len = mixins.length; i < len; ++i) {
+    mixin = resolveMixin(mixins[i])
+    props = keys(mixin)
+    for (j = props.length; j--;) {
+      key         = props[j]
+      copyProperty(mixin, object, key) }}
+
+  return object }
+
+
+
+// -- Basic primitives -------------------------------------------------
+
+// ### Function extend
+// Extends the target object with the provided mixins, using a
+// right-most precedence rule.
+//
+// See also:
+//   - `fastExtend`  — lower level function.
+//   - `merge`       — pure version.
+//
+// :: object, mixin... -> object
+function extend(target) {
+  return fastExtend(target, slice(arguments, 1)) }
+
+
+// ### Function merge
+// Creates a new object that merges the provided mixins, using a
+// right-most precedence rule.
+//
+// See also:
+//   - `extend` — impure version.
+//
+// :: mixin... -> object
+function merge() {
+  return fastExtend({}, arguments) }
+
+
+// ### Function derive
+// Creates a new object inheriting from the given prototype and extends
+// the new instance with the provided mixins.
+//
+// :: object, mixin... -> object
+function derive(proto) {
+  return fastExtend(inherit(proto), slice(arguments, 1)) }
+
+
+
+// -- Root object ------------------------------------------------------
+
+// ### Object Base
+//
+// Provides the previous primitive combinators in an easy and OOP-way.
+//
+// :: object <| Base
+var Base = {
+
+  constructor: function(){ }
+
+  // #### Function make
+  // Constructs new instances of this object.
   //
-  // copy_property! :: Object, target:Object*, String -> target
-  function copy_property(source, target, property) {
-    !has_getter_p?     target[property] = source[property]
-    : /* otherwise */  define(target, property, descriptor(source, property))
+  // :: @object => A... -> this <| object
+, make:
+  function make() {
+    var instance = new this.constructor
+    if (this.init)  this.init.apply(instance, arguments)
+    return instance }
 
-    return target
-  }
-
-  ///// Function data_obj_p
-  // :internal:
-  // Checks if the given subject matches the ``DataObject`` interface
+  // #### Function derive
+  // Constructs a new object that inherits from the object this function
+  // is being applied to, and extends it with the provided mixins.
   //
-  // data_obj_p :: Any -> Bool
-  function data_obj_p(subject) {
-    return subject != null
-    &&     typeof subject.to_data == 'function' }
+  // :: @object => mixin... -> this <| object
+, derive:
+  function _derive() {
+    var instance = fastExtend(inherit(this), arguments)
+
+    instance.constructor = function(){ }
+    instance.constructor.prototype = instance
+    return instance }}
+
+Base.constructor.prototype = Base
 
 
-  ///// Function resolve_mixins
-  // :internal:
-  // Returns the proper object for the given mixin.
-  //
-  // resolve_mixin :: Mixin -> Object
-  function resolve_mixin(subject) {
-    return data_obj_p(subject)?  subject.to_data()
-    :      /* otherwise */       subject }
+
+// -- Exports ----------------------------------------------------------
+module.exports = { extend : extend
+                 , merge  : merge
+                 , derive : derive
+                 , Base   : Base }
 
-
-  ///// Function fast_extend
-  // :internal:
-  // Extends the target object with the provided mixins, using a
-  // right-most precedence rule — when a there's a property conflict, the
-  // property defined in the last object wins.
-  //
-  // ``DataObject``s are properly handled by the ``resolve_mixin``
-  // function.
-  //
-  // :warning: low-level
-  //    This function is not meant to be called directly from end-user
-  //    code, use the ``extend`` function instead.
-  //
-  // fast_extend! :: target:Object*, [Mixin] -> target
-  function fast_extend(object, mixins) {
-    var i, j, len, mixin, props, key
-    for (i = 0, len = mixins.length; i < len; ++i) {
-      mixin = resolve_mixin(mixins[i])
-      props = keys(mixin)
-      for (j = props.length; j--;) {
-        key         = props[j]
-        copy_property(mixin, object, key) }}
-
-    return object }
-
-
-  
-  //// -- Basic primitives ----------------------------------------------------
-
-  ///// Function extend
-  // Extends the target object with the provided mixins, using a
-  // right-most precedence rule.
-  //
-  // :see-also:
-  //   - ``fast_extend`` — lower level function.
-  //   - ``merge``       — pure version.
-  //
-  // extend! :: target:Object*, Mixin... -> target
-  function extend(target) {
-    return fast_extend(target, slice.call(arguments, 1)) }
-
-
-  ///// Function merge
-  // Creates a new object that merges the provided mixins, using a
-  // right-most precedence rule.
-  //
-  // :see-also:
-  //   - ``extend`` — impure version.
-  //
-  // merge :: Mixin... -> Object
-  function merge() {
-    return fast_extend({}, arguments) }
-
-
-  ///// Function derive
-  // Creates a new object inheriting from the given prototype and extends
-  // the new instance with the provided mixins.
-  //
-  // derive :: proto:Object, Mixin... -> Object <| proto
-  function derive(proto) {
-    return fast_extend(inherit(proto), slice.call(arguments, 1)) }
-
-
-  ///// Function make
-  // Constructs a new instance of the given object.
-  //
-  // If the object provides an ``init`` function, that function is
-  // invoked to do initialisation on the new instance.
-  //
-  // make :: proto:Object, Any... -> Object <| proto
-  function make(base) {
-    return Base.make.apply(base, slice.call(arguments, 1)) }
-
-
-  
-  //// -- Root object ---------------------------------------------------------
-
-  ///// Object Base
-  // The root object for basing all the OOP code. Provides the previous
-  // primitive combinators in an easy and OOP-way.
-  var Base = {
-
-    ////// Function make
-    // Constructs new instances of the object the function is being
-    // applied to.
-    //
-    // If the object provides an ``init`` function, that function is
-    // invoked to do initialisation on the new instance.
-    //
-    // make :: @this:Object, Any... -> Object <| this
-    make:
-    function _make() {
-      var result = inherit(this)
-      if (typeof result.init == 'function')
-        result.init.apply(result, arguments)
-
-      return result }
-
-    ////// Function derive
-    // Constructs a new object that inherits from the object this function
-    // is being applied to, and extends it with the provided mixins.
-    //
-    // derive :: @this:Object, Mixin... -> Object <| this
-  , derive:
-    function _derive() {
-      return fast_extend(inherit(this), arguments) }}
-
-
-  
-  //// -- Exports -------------------------------------------------------------
-  exports.extend   = extend
-  exports.merge    = merge
-  exports.derive   = derive
-  exports.make     = make
-  exports.Base     = Base
-  exports.internal = { data_obj_p    : data_obj_p
-                     , fast_extend   : fast_extend
-                     , resolve_mixin : resolve_mixin
-                     , copy_property : copy_property
-                     }
-
-}
-( this
-, typeof exports == 'undefined'?  this.boo = this.boo || {}
-  /* otherwise, yay modules! */:  exports
-)
-
-},{}],8:[function(require,module,exports){// prelude.ls 0.6.0
+},{}],8:[function(require,module,exports){
+// prelude.ls 0.6.0
 // Copyright (c) 2012 George Zahariev
 // Released under the MIT License
 // raw.github.com/gkz/prelude-ls/master/LICNSE
@@ -1700,7 +1692,8 @@ function import$(obj, src){
   for (var key in src) if (own.call(src, key)) obj[key] = src[key];
   return obj;
 }
-},{}],9:[function(require,module,exports){(function(){
+},{}],9:[function(require,module,exports){
+(function(){
   var makeFrom, make, raise;
   makeFrom = curry$(function(type, name, message){
     var options, ref$;
@@ -1738,4 +1731,6 @@ function import$(obj, src){
   }
 }).call(this);
 
-},{}]},{},[1]);
+},{}]},{},[1])(1)
+});
+;
