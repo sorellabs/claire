@@ -12,16 +12,16 @@
     "flaw": "~0.1.0"
   },
   "devDependencies": {
-    "LiveScript": "~1.1.1",
-    "es5-shim": "~2.1.0",
-    "brofist-tap": "~0.2.0",
-    "brofist": "~0.3.1",
-    "brofist-minimal": "~0.2.0",
-    "browserify": "~2.18.1"
+    "LiveScript": "~1.2.0",
+    "es5-shim": "~2.3.0",
+    "browserify": "~3.19.0",
+    "hifive-tap": "~0.1.1",
+    "hifive": "~0.1.0",
+    "faucet": "0.0.0"
   },
   "scripts": {
     "test": "make test",
-    "prepublish": "make prepublish"
+    "prepublish": "make compile"
   },
   "repository": {
     "type": "git",

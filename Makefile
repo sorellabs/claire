@@ -3,6 +3,7 @@ lsc        = $(bin)/lsc
 browserify = $(bin)/browserify
 groc       = $(bin)/groc
 uglify     = $(bin)/uglifyjs
+faucet     = $(bin)/faucet
 VERSION    = $(shell node -e 'console.log(require("./package.json").version)')
 
 
@@ -32,7 +33,7 @@ clean:
 	rm -rf dist build lib
 
 test:
-	$(lsc) test/tap.ls
+	$(lsc) test/tap.ls | $(faucet)
 
 package: compile documentation bundle minify
 	mkdir -p dist/claire-$(VERSION)

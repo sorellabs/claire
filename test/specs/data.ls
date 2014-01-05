@@ -1,4 +1,4 @@
-describe = (require 'brofist')!
+describe = (require 'hifive')!
 
 { keys, fold, values } = require 'prelude-ls'
 
