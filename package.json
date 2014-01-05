@@ -9,7 +9,8 @@
   "dependencies": {
     "boo": "~2.0.0",
     "prelude-ls": "~1.0.3",
-    "flaw": "~0.1.0"
+    "flaw": "~0.1.0",
+    "data.stream": "0.0.1"
   },
   "devDependencies": {
     "LiveScript": "~1.2.0",
