@@ -25,40 +25,17 @@
   },
   "repository": {
     "type": "git",
-    "url": "git://github.com/killdream/claire.git"
+    "url": "git://github.com/robotlolita/claire.git"
   },
   "keywords": [
     "testing",
     "test",
     "property-based testing",
     "random testing",
-    "quickcheck"
+    "quickcheck",
+    "smallcheck"
   ],
   "author": "Quildreen \"Sorella\" Motta <quildreen@gmail.com>",
   "license": "MIT",
-  "readmeFilename": "README.md",
-  "calliope": {
-    "output": "docs/api",
-    "copyright": "© 2013 Quildreen \"Sorella\" Motta",
-    "packages": [
-      {
-        "files": [
-          "src/*.ls"
-        ]
-      }
-    ]
-  },
-  "testling": {
-    "files": "build/test/tap.js",
-    "browsers": [
-      "ie/6..latest",
-      "chrome/20..latest",
-      "firefox/15..latest",
-      "safari/latest",
-      "opera/11.0..latest",
-      "iphone/6",
-      "ipad/6",
-      "android-browser/4.2"
-    ]
-  }
+  "readmeFilename": "README.md"
 }
