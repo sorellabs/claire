@@ -1,9 +1,10 @@
 Claire 
 ======
 
+[![Build Status](https://secure.travis-ci.org/robotlolita/claire.png?branch=master)](https://travis-ci.org/robotlolita/claire)
+[![NPM version](https://badge.fury.io/js/claire.png)](http://badge.fury.io/js/claire)
+[![Dependencies Status](https://david-dm.org/robotlolita/claire.png)](https://david-dm.org/robotlolita/claire)
 [![experimental](http://hughsk.github.io/stability-badges/dist/experimental.svg)](http://github.com/hughsk/stability-badges)
-[![Build Status](https://travis-ci.org/killdream/claire.png)](https://travis-ci.org/killdream/claire)
-![Dependencies Status](https://david-dm.org/killdream/claire.png)
 
 
 Claire is a random testing library for both property-based testing
@@ -14,7 +15,7 @@ in a clear way.
 [QuickCheck]: https://github.com/nick8325/quickcheck
 [ScalaCheck]: https://github.com/rickynils/scalacheck
 
-### Example 
+## Example 
 
 ```js
 var claire = require('claire')
@@ -44,67 +45,91 @@ identity_p.asTest({ verbose: true, times: 100 })()
 ```
 
 
-### Installing
+## Installing
 
-The easiest way is to grab it from NPM (use [Browserify][] if you're on a
-browser):
+The easiest way is to grab it from NPM. If you're running in a Browser
+environment, you can use [Browserify][]
 
     $ npm install claire
-    
-If you **really** want to continue suffering with old and terrible module
-systems (or use no module system at all), you can run `make bundle` yourself:
 
-    $ git clone git://github.com/killdream/claire
+
+### Using with CommonJS
+
+If you're not using NPM, [Download the latest release][release], and require
+the `claire.umd.js` file:
+
+```js
+var claire = require('claire')
+```
+
+
+### Using with AMD
+
+[Download the latest release][release], and require the `claire.umd.js`
+file:
+
+```js
+require(['claire'], function(claire) {
+  ( ... )
+})
+```
+
+
+### Using without modules
+
+[Download the latest release][release], and load the `claire.umd.js`
+file. The properties are exposed in the global `claire` object:
+
+```html
+<script src="/path/to/claire.umd.js"></script>
+```
+
+
+### Compiling from source
+
+If you want to compile this library from the source, you'll need [Git][],
+[Make][], [Node.js][], and run the following commands:
+
+    $ git clone git://github.com/robotlolita/claire.git
     $ cd claire
     $ npm install
     $ make bundle
-    # Then use `dist/claire.umd.js` wherever you want.
     
-[browserify]: https://github.com/substack/node-browserify
+This will generate the `dist/claire.umd.js` file, which you can load in
+any JavaScript environment.
+
+    
+## Documentation
+
+You can [read the documentation online][docs] or build it yourself:
+
+    $ git clone git://github.com/robotlolita/claire.git
+    $ cd claire
+    $ npm install
+    $ make documentation
+
+Then open the file `docs/manual/build/html/index.html` in your browser.
 
 
-### Documentation
+## Platform support
 
-A reference of the API can be built using [Calliope][]:
-
-    $ npm install -g calliope
-    $ calliope build
+This library assumes an ES5 environment, but can be easily supported in ES3
+platforms by the use of shims. Just include [es5-shim][] :)
 
 
-A fully narrated documentation explaining the concepts behind the
-library is planned for a future release. Current WIP can be found at
-http://claire.readthedocs.org/.
+## Licence
 
-[Calliope]: http://github.com/killdream/calliope.git
+Copyright (c) 2013 Quildreen Motta.
 
+Released under the [MIT licence](https://github.com/robotlolita/claire/blob/master/LICENCE).
 
-### Platform support
-
-Claire should work neatly in all ES5 platforms. ES3 platforms (IE8-,
-etc) can use [es5-shim][] to provide the fallbacks necessary.
-
+<!-- links -->
+[Browserify]: http://browserify.org/
+[Git]: http://git-scm.com/
+[Make]: http://www.gnu.org/software/make/
+[Node.js]: http://nodejs.org/
 [es5-shim]: https://github.com/kriskowal/es5-shim
-
-Things are frozen to ensure immutability, but legacy engines can do
-without, so `Object.freeze = function(a) { return a }` is okay.
-
-[![browser support](https://ci.testling.com/killdream/claire.png)](http://ci.testling.com/killdream/claire)
-
-
-### Tests
-
-For node:
-
-    $ npm test
-
-For the browser:
-
-    $ npm install -g brofist-browser
-    $ make test
-    $ brofist-browser serve test/specs
-    # Then point your browsers to the URL on yer console
-
-
-### Licence
-
-MIT/X11. ie.: do whatever you want.
+[docs]: http://claire.readthedocs.org/
+<!-- [release: https://github.com/robotlolita/claire/releases/download/v$VERSION/claire-$VERSION.tar.gz] -->
+[release]: https://github.com/robotlolita/claire/releases/download/v1.0.0/claire-1.0.0.tar.gz
+<!-- [/release] -->
