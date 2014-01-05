@@ -10,3 +10,5 @@ npm-debug.log
 syntax: regexp
 ^node_modules/
 ^lib/
+^build/
+^dist/
