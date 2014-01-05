@@ -1,31 +1,61 @@
-bin := $(shell npm bin)
-browserify := $(bin)/browserify lib/index.js
-lsc := $(bin)/lsc
+bin        = $(shell npm bin)
+lsc        = $(bin)/lsc
+browserify = $(bin)/browserify
+groc       = $(bin)/groc
+uglify     = $(bin)/uglifyjs
+VERSION    = $(shell node -e 'console.log(require("./package.json").version)')
+
 
 lib: src/*.ls
 	$(lsc) -o lib -c src/*.ls
 
-build/test: test/*.ls
-	$(lsc) -o build/test -c test/*.ls
-
-build/test/specs: build/test test/specs/*.ls
-	$(lsc) -o build/test/specs -c test/specs/*.ls
-
-build/lib: src/*.ls
-	$(lsc) -o build/lib -c src/*.ls
-
-bundle: lib
+dist:
 	mkdir -p dist
-	$(browserify) --standalone claire > dist/claire.umd.js
+
+dist/claire.umd.js: compile dist
+	$(browserify) lib/index.js --standalone claire > $@
+
+dist/claire.umd.min.js: dist/claire.umd.js
+	$(uglify) --mangle - < $^ > $@
+
+# ----------------------------------------------------------------------
+bundle: dist/claire.umd.js
+
+minify: dist/claire.umd.min.js
+
+compile: lib
+
+documentation:
+	cd docs/manual && make html
 
 clean:
 	rm -rf dist build lib
 
-pretest: build/lib build/test build/test/specs
+test:
+	$(lsc) test/tap.ls
 
-prepublish: lib
+package: compile documentation bundle minify
+	mkdir -p dist/claire-$(VERSION)
+	cp -r docs/literate dist/claire-$(VERSION)/docs
+	cp -r lib dist/claire-$(VERSION)
+	cp dist/*.js dist/claire-$(VERSION)
+	cp package.json dist/claire-$(VERSION)
+	cp README.md dist/claire-$(VERSION)
+	cp LICENCE dist/claire-$(VERSION)
+	cd dist && tar -czf claire-$(VERSION).tar.gz claire-$(VERSION)
 
-test: pretest
-	node ./build/test/node.js
+publish: clean
+	npm install
+	npm publish
+
+bump:
+	node tools/bump-version.js $$VERSION_BUMP
+
+bump-feature:
+	VERSION_BUMP=FEATURE $(MAKE) bump
+
+bump-major:
+	VERSION_BUMP=MAJOR $(MAKE) bump
+
 
 .PHONY: test
