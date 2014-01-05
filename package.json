@@ -8,7 +8,7 @@
   },
   "dependencies": {
     "boo": "~2.0.0",
-    "prelude-ls": "~0.6.0",
+    "prelude-ls": "~1.0.3",
     "flaw": "~0.1.0"
   },
   "devDependencies": {
