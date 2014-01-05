@@ -3,7 +3,7 @@
 # Tests if properties hold for N random value generations.
 #
 # 
-# Copyright (c) 2013 Quildreen "Sorella" Motta <quildreen@gmail.com>
+# Copyright (c) 2013-2014 Quildreen "Sorella" Motta <quildreen@gmail.com>
 # 
 # Permission is hereby granted, free of charge, to any person
 # obtaining a copy of this software and associated documentation files
