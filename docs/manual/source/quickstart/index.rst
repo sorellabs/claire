@@ -33,7 +33,7 @@ run the test cases, you have more chances of catching bugs that weren't
 previously caught, even if you don't change anything in your code. This can
 highly increase the confidence you have in a code base.
 
-Claire does not proof that a code base has no bugs, instead it is a tool to
+Claire does not prove that a code base has no bugs, instead it is a tool to
 increase the test space (and thus the number of bugs you can catch), and help
 you analyse the data that makes a particular test fail.
 
@@ -113,7 +113,7 @@ passed. But what if it had failed? Well, let's see another property::
     // (Stack trace)
 
 
-Now, it does tell us pretty loudly that the property didn't held. And that it
+Now, it does tell us pretty loudly that the property didn't hold. And that it
 failed in the very first test too! It also provides information about which
 arguments were given to the property, and a stack trace, which we can ignore
 for now.
